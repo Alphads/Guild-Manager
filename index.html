@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>⚔️ ISEKAI GUILD MANAGER · BALANCED</title>
+  <title>⚔️ ISEKAI GUILD MANAGER · TIMING FIX</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     ::-webkit-scrollbar { width: 8px; height: 8px; }
@@ -86,16 +86,16 @@ No battles...</pre>
   const CL = { warrior:{n:'Warrior',ba:8,bd:5,e:'⚔️',sk:'cleave',dt:'dmg'}, mage:{n:'Mage',ba:12,bd:2,e:'🔮',sk:'fireball',dt:'dmg'}, rogue:{n:'Rogue',ba:10,bd:3,e:'🗡️',sk:'backstab',dt:'dmg'}, cleric:{n:'Cleric',ba:5,bd:7,e:'✝️',sk:'heal',dt:'heal'}, archer:{n:'Archer',ba:9,bd:4,e:'🏹',sk:'lifesteal',dt:'dmg'} };
   const NAMES = ['Aldric','Thorne','Bram','Cedric','Dorian','Elara','Fenris','Gareth','Hawke','Iris','Jorah','Kael','Lysa','Maren','Nyx','Orin'];
 
-  // BALANCED: Higher rep requirements, longer cooldowns, moderate boss HP
+  // FIXED: Longer quest durations so there's actual time to fight
   const QUESTS = [
-    { n:'Goblin Hunt', d:2, r:15, dur:5, i:'👺', e:'Goblin', rep:0, hp:40, cd:0 },
-    { n:'Escort', d:1, r:8, dur:4, i:'🛡️', e:'Bandit', rep:0, hp:25, cd:0 },
-    { n:'Dungeon', d:5, r:50, dur:10, i:'🕳️', e:'Skeleton', rep:150, hp:120, cd:60 },
-    { n:'Treasure', d:4, r:35, dur:8, i:'💎', e:'Golem', rep:100, hp:90, cd:30 },
-    { n:'Dragon', d:10, r:200, dur:20, i:'🐉', e:'Dragon', rep:500, hp:400, cd:86400 },
-    { n:'Dark Knight', d:8, r:120, dur:16, i:'🦹', e:'Dark Knight', rep:350, hp:280, cd:43200 },
-    { n:'Lich Tower', d:9, r:160, dur:18, i:'🧙', e:'Lich', rep:400, hp:340, cd:21600 },
-    { n:'Demon Lord', d:15, r:500, dur:30, i:'👹', e:'Demon Lord', rep:800, hp:700, cd:3600 },
+    { n:'Goblin Hunt', d:2, r:15, dur:12, i:'👺', e:'Goblin', rep:0, hp:40, cd:0 },
+    { n:'Escort', d:1, r:8, dur:10, i:'🛡️', e:'Bandit', rep:0, hp:25, cd:0 },
+    { n:'Dungeon', d:5, r:50, dur:25, i:'🕳️', e:'Skeleton', rep:150, hp:120, cd:60 },
+    { n:'Treasure', d:4, r:35, dur:20, i:'💎', e:'Golem', rep:100, hp:90, cd:30 },
+    { n:'Dragon', d:10, r:200, dur:50, i:'🐉', e:'Dragon', rep:500, hp:400, cd:86400 },
+    { n:'Dark Knight', d:8, r:120, dur:40, i:'🦹', e:'Dark Knight', rep:350, hp:280, cd:43200 },
+    { n:'Lich Tower', d:9, r:160, dur:45, i:'🧙', e:'Lich', rep:400, hp:340, cd:21600 },
+    { n:'Demon Lord', d:15, r:500, dur:70, i:'👹', e:'Demon Lord', rep:800, hp:700, cd:3600 },
   ];
   
   const EQ = { ws:{ n:'Wood Sword', ab:3, db:0, c:50, i:'🗡️' }, ia:{ n:'Iron Armor', ab:0, db:3, c:60, i:'🛡️' }, ms:{ n:'Magic Staff', ab:6, db:0, c:150, i:'🔮' }, sp:{ n:'Steel Plate', ab:0, db:5, c:130, i:'⚔️' }, lb:{ n:'Legend Blade', ab:12, db:3, c:400, i:'⭐' }, sb:{ n:'Swift Boots', ab:2, db:3, c:100, i:'👢' }, pr:{ n:'Power Ring', ab:5, db:1, c:200, i:'💍' } };
@@ -107,7 +107,7 @@ No battles...</pre>
   function getPartyPower(p) { return p.m.reduce((s,id)=>{const a=S.adv.find(x=>x.id===id);return s+(a?a.atk+a.def:0);},0); }
   function getQuestReq(q) { return q.d * 4; }
 
-  document.addEventListener('visibilitychange', () => { const wh = !isTabVisible; isTabVisible = !document.hidden; if (isTabVisible && wh) { const now = Date.now(); const hd = Math.floor((now - lastVisible) / 1000); if (hd > 2) { const cy = Math.min(Math.floor(hd * 2), 100000); const wa = ae; ae = true; for (let i = 0; i < cy; i++) gloopInternal(); ae = wa; document.getElementById('afkBadge').style.display = 'none'; al(`⏳ AFK ${fmtTime(hd)}`); } lastVisible = Date.now(); } else if (!isTabVisible) { lastVisible = Date.now(); document.getElementById('afkBadge').style.display = 'inline-block'; } });
+  document.addEventListener('visibilitychange', () => { const wh = !isTabVisible; isTabVisible = !document.hidden; if (isTabVisible && wh) { const now = Date.now(); const hd = Math.floor((now - lastVisible) / 1000); if (hd > 2) { const cy = Math.min(Math.floor(hd * 2), 100000); const wa = ae; ae = true; for (let i = 0; i < cy; i++) gloopInternal(); ae = wa; document.getElementById('afkBadge').style.display = 'none'; } lastVisible = Date.now(); } else if (!isTabVisible) { lastVisible = Date.now(); document.getElementById('afkBadge').style.display = 'inline-block'; } });
 
   function aq() { const now = Date.now(); return QUESTS.filter(q => { if (S.rep < q.rep) return false; if (q.cd > 0 && S.qCd[q.n] && now < S.qCd[q.n]) return false; return true; }); }
   function bq(p) { const pw = getPartyPower(p); const av = aq(); let best = null; for(let q of av) { if(pw >= getQuestReq(q) && (!best || q.d > best.d)) best = q; } return best; }
@@ -124,7 +124,6 @@ No battles...</pre>
 
   function ic(pid,q){const p=S.pt.find(x=>x.id===pid);if(!p)return;const mb=p.m.map(id=>S.adv.find(a=>a.id===id)).filter(a=>a&&a.hp>0);S.ac[pid]={en:q.e,ehp:q.hp,meh:q.hp,mb:mb.map(m=>({...m,chp:m.hp,bt:0})),ms:[],pw:false,ed:false,td:0,th:0};}
   
-  // NERFED: Lower damage multipliers, higher minimum damage floor
   function us(adv,cm){const cd=CL[adv.class];let dmg=0,heal=0,msg='';if(cd.dt==='heal'){heal=Math.floor(adv.atk*1.2*(0.8+Math.random()*0.4));cm.mb.forEach(m=>{m.chp=Math.min(m.maxHp,m.chp+heal);});cm.th+=heal;msg=`✝️ ${adv.name} HEALS! +${heal}`;}else{switch(cd.sk){case'cleave':dmg=Math.floor(adv.atk*1.3*(0.7+Math.random()*0.4));msg=`⚔️ ${adv.name} CLEAVES! -${dmg}`;break;case'fireball':dmg=Math.floor(adv.atk*1.1*(0.7+Math.random()*0.4));cm.mb.forEach(m=>{if(m.id===adv.id)m.bt=3;});msg=`🔥 ${adv.name} FIREBALL! -${dmg}+BURN`;break;case'backstab':dmg=Math.floor(adv.atk*1.6*(0.8+Math.random()*0.3));msg=`🗡️ ${adv.name} BACKSTAB! -${dmg}`;break;case'lifesteal':dmg=Math.floor(adv.atk*1.2*(0.7+Math.random()*0.4));const sh=Math.floor(dmg*0.4);cm.mb.forEach(m=>{if(m.id===adv.id)m.chp=Math.min(m.maxHp,m.chp+sh);});cm.th+=sh;msg=`💜 ${adv.name} VAMP! -${dmg}+${sh}HP`;break;default:dmg=Math.floor(adv.atk*0.9*(0.7+Math.random()*0.4));msg=`${cd.e} ${adv.name} attacks! -${dmg}`;}dmg=Math.max(3,dmg);cm.ehp-=dmg;cm.td+=dmg;}return{msg,dmg,heal};}
   
   function tc(pid){const c=S.ac[pid];if(!c||c.pw||c.ed)return;c.ms=[];c.mb.forEach(m=>{if(m.bt>0&&m.chp>0){m.chp-=5;m.bt--;c.ms.push(`🔥 ${m.name} -5 burn`);}});c.mb.forEach(m=>{if(m.chp<=0)return;c.ms.push(us(m,c).msg);});if(c.ehp<=0){c.ed=true;c.ms.push(`✨ ${c.en} defeated!`);c.mb.forEach(m=>{const a=S.adv.find(x=>x.id===m.id);if(a)a.hp=Math.min(a.maxHp,m.chp+15);});return;}const alv=c.mb.filter(m=>m.chp>0);if(alv.length>0){const t=alv[Math.floor(Math.random()*alv.length)];const q=QUESTS.find(x=>x.e===c.en);const edmg=Math.floor((q?.d||2)*3*(0.7+Math.random()*0.4));t.chp-=edmg;c.ms.push(`👹 ${c.en} -${edmg} → ${t.name}`);if(t.chp<=0){c.ms.push(`💀 ${t.name} down!`);t.chp=0;}}if(c.mb.every(m=>m.chp<=0)){c.pw=true;c.ms.push('💀 WIPED!');c.mb.forEach(m=>{scd(m.id);const a=S.adv.find(x=>x.id===m.id);if(a)a.hp=0;});}}
@@ -179,10 +178,10 @@ No battles...</pre>
     rc();
   }
 
-  function sv(){S.lt=Date.now();const ss={g:S.g,rep:S.rep,gl:S.gl,adv:S.adv,pt:S.pt.map(p=>({...p,q:null,pr:0})),lt:Date.now(),un:Array.from(S.un),dc:S.dc,aq:S.aq,gn:gn,qCd:S.qCd};try{localStorage.setItem('isekaiGV34',btoa(JSON.stringify(ss)));}catch(e){}}
+  function sv(){S.lt=Date.now();const ss={g:S.g,rep:S.rep,gl:S.gl,adv:S.adv,pt:S.pt.map(p=>({...p,q:null,pr:0})),lt:Date.now(),un:Array.from(S.un),dc:S.dc,aq:S.aq,gn:gn,qCd:S.qCd};try{localStorage.setItem('isekaiGV35',btoa(JSON.stringify(ss)));}catch(e){}}
   function ex(){const ss={g:S.g,rep:S.rep,gl:S.gl,adv:S.adv,pt:S.pt.map(p=>({...p,q:null,pr:0})),un:Array.from(S.un),dc:S.dc,aq:S.aq,gn:gn,qCd:S.qCd};const d=btoa(JSON.stringify(ss));const m=document.getElementById('dataModal');document.getElementById('dataTextarea').value=d;document.getElementById('dataActionBtn').style.display='inline-block';document.getElementById('dataImportBtn').style.display='none';m.classList.add('active');document.getElementById('dataActionBtn').onclick=function(){navigator.clipboard?.writeText(document.getElementById('dataTextarea').value);};}
   function im(){const m=document.getElementById('dataModal');document.getElementById('dataTextarea').value='';document.getElementById('dataActionBtn').style.display='none';document.getElementById('dataImportBtn').style.display='inline-block';m.classList.add('active');document.getElementById('dataImportBtn').onclick=function(){try{const dec=JSON.parse(atob(document.getElementById('dataTextarea').value.trim()));S={...S,g:dec.g||50,rep:dec.rep||0,gl:dec.gl||1,adv:dec.adv||[],pt:dec.pt||[],ac:{},un:new Set(dec.un||[]),dc:dec.dc||{},aq:dec.aq||{},lt:Date.now(),lm:S.lm,qCd:dec.qCd||{}};gn=dec.gn||'FALLEN STAR';document.getElementById('guildTitle').textContent=`⚔️ ${gn} ⚔️`;m.classList.remove('active');ui();}catch(e){}};}
-  function ld(){const sv=localStorage.getItem('isekaiGV34');if(sv){try{const dec=JSON.parse(atob(sv));S={...S,g:dec.g||50,rep:dec.rep||0,gl:dec.gl||1,adv:dec.adv||[],pt:dec.pt||[],ac:{},un:new Set(dec.un||[]),dc:dec.dc||{},aq:dec.aq||{},lt:dec.lt||Date.now(),lm:S.lm,qCd:dec.qCd||{}};gn=dec.gn||'FALLEN STAR';document.getElementById('guildTitle').textContent=`⚔️ ${gn} ⚔️`;return true;}catch(e){}}return false;}
+  function ld(){const sv=localStorage.getItem('isekaiGV35');if(sv){try{const dec=JSON.parse(atob(sv));S={...S,g:dec.g||50,rep:dec.rep||0,gl:dec.gl||1,adv:dec.adv||[],pt:dec.pt||[],ac:{},un:new Set(dec.un||[]),dc:dec.dc||{},aq:dec.aq||{},lt:dec.lt||Date.now(),lm:S.lm,qCd:dec.qCd||{}};gn=dec.gn||'FALLEN STAR';document.getElementById('guildTitle').textContent=`⚔️ ${gn} ⚔️`;return true;}catch(e){}}return false;}
   function op(){const d=Math.floor((Date.now()-S.lt)/1000);if(d>3){const cy=Math.min(Math.floor(d*2),100000);const wa=ae;ae=true;for(let i=0;i<cy;i++)gloopInternal();ae=wa;}S.lt=Date.now();}
 
   function sgn(){document.getElementById('guildNameModal').classList.add('active');}
