@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>⚔️ ISEKAI GUILD MANAGER · RPG GUI</title>
+  <title>⚔️ ISEKAI GUILD MANAGER · FAST PACED</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     ::-webkit-scrollbar { width: 8px; height: 8px; }
@@ -11,156 +11,62 @@
     ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #6b5a3e, #4a3a25); border-radius: 8px; border: 1px solid #8a7a50; }
     ::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, #8a7a50, #6b5a3e); }
     * { scrollbar-width: thin; scrollbar-color: #6b5a3e #0a0a15; }
-    
-    @font-face { font-family: 'RPG'; src: local('Courier New'); }
-    
     body {
-      background: #080812;
-      color: #d4c5a0;
-      font-family: 'Courier New', monospace;
+      background: #080812; color: #d4c5a0; font-family: 'Courier New', monospace;
       display: flex; justify-content: center; align-items: center;
       min-height: 100vh; padding: 8px;
-      background-image: 
-        url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 5 L55 30 L30 55 L5 30Z' stroke='%232a2a20' fill='none' stroke-width='0.5'/%3E%3C/svg%3E"),
-        radial-gradient(ellipse at 30% 20%, rgba(100,70,20,0.08) 0%, transparent 60%),
-        radial-gradient(ellipse at 70% 80%, rgba(80,40,60,0.06) 0%, transparent 60%);
+      background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 5 L55 30 L30 55 L5 30Z' stroke='%232a2a20' fill='none' stroke-width='0.5'/%3E%3C/svg%3E"), radial-gradient(ellipse at 30% 20%, rgba(100,70,20,0.08) 0%, transparent 60%), radial-gradient(ellipse at 70% 80%, rgba(80,40,60,0.06) 0%, transparent 60%);
     }
     .guild-container {
-      max-width: 1400px; width: 100%;
-      background: linear-gradient(180deg, 
-        rgba(20,15,10,0.95) 0%, 
-        rgba(25,18,15,0.98) 30%,
-        rgba(20,15,10,0.95) 100%);
-      border: 3px solid transparent;
-      border-image: linear-gradient(135deg, #6b5a3e 0%, #9b8a60 20%, #6b5a3e 40%, #8a7040 60%, #6b5a3e 80%, #9b8a60 100%) 1;
-      border-radius: 12px; padding: 10px;
-      box-shadow: 
-        0 0 60px rgba(100,70,30,0.15),
-        0 0 120px rgba(0,0,0,0.5),
-        inset 0 0 80px rgba(0,0,0,0.4),
-        inset 0 1px 0 rgba(255,200,100,0.05);
+      max-width: 1400px; width: 100%; background: linear-gradient(180deg, rgba(20,15,10,0.95) 0%, rgba(25,18,15,0.98) 30%, rgba(20,15,10,0.95) 100%);
+      border: 3px solid transparent; border-image: linear-gradient(135deg, #6b5a3e 0%, #9b8a60 20%, #6b5a3e 40%, #8a7040 60%, #6b5a3e 80%, #9b8a60 100%) 1;
+      border-radius: 12px; padding: 10px; box-shadow: 0 0 60px rgba(100,70,30,0.15), 0 0 120px rgba(0,0,0,0.5), inset 0 0 80px rgba(0,0,0,0.4);
       display: flex; flex-direction: column; gap: 8px; height: 98vh;
     }
-    .header {
-      text-align: center; padding: 10px;
-      background: linear-gradient(180deg, rgba(40,25,10,0.6) 0%, rgba(20,12,5,0.4) 100%);
-      border: 1px solid #6b5a3e;
-      border-radius: 8px;
-      box-shadow: inset 0 0 20px rgba(0,0,0,0.3), 0 2px 8px rgba(0,0,0,0.4);
-      flex-shrink: 0; cursor: pointer; position: relative;
-    }
+    .header { text-align: center; padding: 10px; background: linear-gradient(180deg, rgba(40,25,10,0.6) 0%, rgba(20,12,5,0.4) 100%); border: 1px solid #6b5a3e; border-radius: 8px; flex-shrink: 0; cursor: pointer; }
     .header:hover { border-color: #9b8a60; }
-    .header h1 { 
-      color: #ffd700; 
-      text-shadow: 0 0 12px #ff8c00, 0 2px 4px rgba(0,0,0,0.8);
-      font-size: 24px; letter-spacing: 3px;
-      background: linear-gradient(180deg, #ffd700, #b8960a);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .header .subtitle { color: #9b8a60; font-size: 10px; letter-spacing: 2px; }
+    .header h1 { color: #ffd700; text-shadow: 0 0 12px #ff8c00; font-size: 24px; letter-spacing: 3px; background: linear-gradient(180deg, #ffd700, #b8960a); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
     .main-content { display: flex; gap: 10px; flex: 1; min-height: 0; }
     .left-panel { flex: 1.3; display: flex; flex-direction: column; gap: 8px; min-height: 0; }
     .right-panel { flex: 0.7; display: flex; flex-direction: column; gap: 8px; min-height: 0; }
-    
-    .guild-view {
-      background: linear-gradient(180deg, rgba(15,10,5,0.9) 0%, rgba(10,8,4,0.95) 100%);
-      border: 1px solid #4a3a25;
-      border-radius: 6px;
-      padding: 10px; white-space: pre; font-size: 11px; line-height: 1.35;
-      color: #c8b896; overflow-y: auto; flex: 1; min-height: 0;
-      box-shadow: inset 0 0 30px rgba(0,0,0,0.5);
-    }
-    .combat-arena {
-      background: linear-gradient(180deg, rgba(15,5,5,0.9) 0%, rgba(10,5,5,0.95) 100%);
-      border: 1px solid #5a3030;
-      border-radius: 6px;
-      padding: 12px; white-space: pre; font-size: 11px; line-height: 1.35;
-      color: #ffcccc; overflow-y: auto; flex: 2; min-height: 0;
-      box-shadow: inset 0 0 30px rgba(50,0,0,0.5);
-    }
+    .guild-view { background: linear-gradient(180deg, rgba(15,10,5,0.9) 0%, rgba(10,8,4,0.95) 100%); border: 1px solid #4a3a25; border-radius: 6px; padding: 10px; white-space: pre; font-size: 11px; line-height: 1.35; color: #c8b896; overflow-y: auto; flex: 1; min-height: 0; }
+    .combat-arena { background: linear-gradient(180deg, rgba(15,5,5,0.9) 0%, rgba(10,5,5,0.95) 100%); border: 1px solid #5a3030; border-radius: 6px; padding: 12px; white-space: pre; font-size: 11px; line-height: 1.35; color: #ffcccc; overflow-y: auto; flex: 2; min-height: 0; }
     .combat-arena.idle { color: #554040; font-style: italic; }
-    
-    .info-box {
-      background: linear-gradient(180deg, rgba(20,15,8,0.9) 0%, rgba(15,10,5,0.95) 100%);
-      border: 1px solid #4a3a25;
-      border-radius: 6px; padding: 8px; flex-shrink: 0;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,200,100,0.03);
-    }
-    .info-box h3 { 
-      color: #e0c080; margin-bottom: 6px; padding-bottom: 3px;
-      border-bottom: 2px solid #5a4a30; font-size: 12px; letter-spacing: 2px;
-      text-shadow: 0 0 6px rgba(200,150,50,0.3);
-    }
-    .resource-row { 
-      display: flex; justify-content: space-between; margin: 2px 0; padding: 3px 6px;
-      background: rgba(0,0,0,0.3); border-radius: 3px; font-size: 11px;
-      border: 1px solid #2a2a1a;
-    }
-    button {
-      background: linear-gradient(180deg, #2a1f10 0%, #1a1008 100%);
-      border: 1px solid #5a4a30;
-      color: #c0a870; font-family: inherit; padding: 5px 10px; border-radius: 4px;
-      cursor: pointer; font-weight: bold; font-size: 10px; transition: all 0.2s; margin: 2px;
-      text-shadow: 0 1px 2px black; letter-spacing: 1px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.4);
-    }
-    button:hover { 
-      background: linear-gradient(180deg, #3a2f15 0%, #2a1f10 100%);
-      border-color: #9b8a60; color: #ffd700;
-      box-shadow: 0 0 10px rgba(200,150,50,0.3);
-    }
-    button:active { transform: translateY(1px); box-shadow: 0 1px 2px rgba(0,0,0,0.4); }
-    .btn-small { padding: 4px 8px; font-size: 9px; border-radius: 3px; }
+    .info-box { background: linear-gradient(180deg, rgba(20,15,8,0.9) 0%, rgba(15,10,5,0.95) 100%); border: 1px solid #4a3a25; border-radius: 6px; padding: 8px; flex-shrink: 0; }
+    .info-box h3 { color: #e0c080; margin-bottom: 6px; padding-bottom: 3px; border-bottom: 2px solid #5a4a30; font-size: 12px; letter-spacing: 2px; }
+    .resource-row { display: flex; justify-content: space-between; margin: 2px 0; padding: 3px 6px; background: rgba(0,0,0,0.3); border-radius: 3px; font-size: 11px; }
+    button { background: linear-gradient(180deg, #2a1f10 0%, #1a1008 100%); border: 1px solid #5a4a30; color: #c0a870; font-family: inherit; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 10px; transition: all 0.2s; margin: 2px; }
+    button:hover { background: linear-gradient(180deg, #3a2f15 0%, #2a1f10 100%); border-color: #9b8a60; color: #ffd700; }
+    .btn-small { padding: 4px 8px; font-size: 9px; }
     .btn-auto { background: linear-gradient(180deg, #1a2a10, #0f1a08); border-color: #4a5a30; }
-    .btn-auto.active { background: linear-gradient(180deg, #1a3010, #0f2008); border-color: #60aa40; box-shadow: 0 0 8px rgba(100,200,50,0.3); }
-    .btn-fav { background: linear-gradient(180deg, #2a1a20, #1a1020); border-color: #5a3050; }
-    .btn-fav.active { background: linear-gradient(180deg, #3a1a30, #2a1030); border-color: #aa40aa; box-shadow: 0 0 8px rgba(200,100,200,0.3); }
-    
-    .log-box { 
-      background: rgba(0,0,0,0.4); border: 1px solid #3a3020;
-      border-radius: 5px; padding: 6px; font-size: 10px; color: #a09070;
-      flex: 1; overflow-y: auto; min-height: 0;
-    }
-    .progress-bar { background: #0a0a0a; border-radius: 3px; height: 10px; margin: 3px 0; overflow: hidden; border: 1px solid #3a3525; }
-    .progress-fill { height: 100%; transition: width 0.3s; }
+    .btn-auto.active { background: linear-gradient(180deg, #1a3010, #0f2008); border-color: #60aa40; }
+    .log-box { background: rgba(0,0,0,0.4); border: 1px solid #3a3020; border-radius: 5px; padding: 6px; font-size: 10px; color: #a09070; flex: 1; overflow-y: auto; min-height: 0; }
+    .progress-bar { background: #0a0a0a; border-radius: 3px; height: 10px; margin: 3px 0; overflow: hidden; }
+    .progress-fill { height: 100%; }
     .progress-fill.normal { background: linear-gradient(90deg, #cc3300, #dd6600); }
     .progress-fill.failed { background: linear-gradient(90deg, #660000, #990000); }
     .progress-fill.auto { background: linear-gradient(90deg, #004400, #006600); }
     .progress-fill.complete { background: linear-gradient(90deg, #008800, #00aa00); }
-    
     .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; justify-content: center; align-items: center; }
     .modal.active { display: flex; }
-    .modal-content { 
-      background: linear-gradient(180deg, #1a1510, #100c08);
-      border: 2px solid #8a7040; border-radius: 8px; padding: 14px;
-      max-width: 500px; width: 95%; max-height: 75vh; overflow-y: auto;
-      box-shadow: 0 0 40px rgba(0,0,0,0.7);
-    }
-    .modal-option { 
-      background: rgba(30,20,10,0.8); border: 1px solid #4a3a20;
-      border-radius: 4px; padding: 7px; margin: 3px 0;
-      cursor: pointer; font-size: 11px;
-    }
-    .modal-option:hover { background: rgba(50,35,15,0.9); border-color: #9b8a60; }
+    .modal-content { background: linear-gradient(180deg, #1a1510, #100c08); border: 2px solid #8a7040; border-radius: 8px; padding: 14px; max-width: 500px; width: 95%; max-height: 75vh; overflow-y: auto; }
+    .modal-option { background: rgba(30,20,10,0.8); border: 1px solid #4a3a20; border-radius: 4px; padding: 7px; margin: 3px 0; cursor: pointer; font-size: 11px; }
+    .modal-option:hover { background: rgba(50,35,15,0.9); }
     .close-btn { background: #3a1515; border-color: #5a2020; float: right; padding: 4px 10px; }
     .bottom-bar { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; padding: 6px 0; flex-shrink: 0; }
-    
-    .tutorial-text { color: #d4c5a0; line-height: 1.5; font-size: 11px; }
-    .tutorial-text span { color: #e0c080; font-weight: bold; }
     .guild-name-input { background: #0a0805; border: 2px solid #8a7040; color: #ffd700; padding: 8px; font-size: 16px; text-align: center; font-family: 'Courier New', monospace; border-radius: 6px; width: 100%; margin: 8px 0; }
-    .afk-badge { display: inline-block; background: #330033; color: #ff88ff; padding: 1px 6px; border-radius: 8px; font-size: 9px; margin-left: 4px; }
-    .fav-star { color: #ffaa00; cursor: pointer; margin: 0 2px; }
+    .afk-badge { display: inline-block; background: #330033; color: #ff88ff; padding: 1px 6px; border-radius: 8px; font-size: 9px; }
+    .fav-star { color: #ffaa00; cursor: pointer; }
     .fav-star.inactive { color: #444; }
     .locked-quest { opacity: 0.4; pointer-events: none; }
+    .cooldown-text { color: #ff6666; font-size: 9px; }
+    .tutorial-text { color: #d4c5a0; line-height: 1.5; font-size: 11px; }
+    .tutorial-text span { color: #e0c080; font-weight: bold; }
   </style>
 </head>
 <body>
 <div class="guild-container">
-  <div class="header" id="guildHeader" title="Double-click to rename guild">
-    <h1 id="guildTitle">⚔️ GUILD OF THE FALLEN STAR ⚔️</h1>
-    <div class="subtitle">「異世界ギルド · TRUE AFK」</div>
-  </div>
+  <div class="header" id="guildHeader" title="Double-click to rename guild"><h1 id="guildTitle">⚔️ GUILD OF THE FALLEN STAR ⚔️</h1></div>
   <div class="main-content">
     <div class="left-panel">
       <pre id="guildDisplay" class="guild-view">Loading...</pre>
@@ -170,23 +76,23 @@ No active battles...</pre>
     </div>
     <div class="right-panel">
       <div class="info-box"><h3>🏰 GUILD <span class="afk-badge" id="afkBadge" style="display:none;">AFK</span></h3><div class="resource-row"><span>🪙 Gold</span><span id="goldAmount">500</span></div><div class="resource-row"><span>⭐ Rep</span><span id="repAmount">0</span></div><div class="resource-row"><span>📊 Lv</span><span id="guildLevel">1</span></div></div>
-      <div class="info-box"><h3>🎒 PARTIES</h3><div id="partyList" style="max-height:140px;overflow-y:auto;"></div><button id="createPartyBtn">➕ Party (200g)</button><button id="autoAllBtn" class="btn-auto">🤖 Auto All</button></div>
-      <div class="info-box"><h3>🧑 RECRUIT</h3><div style="display:grid;grid-template-columns:1fr 1fr;gap:3px;"><button class="btn-small" data-recruit="warrior">⚔️ War 300g</button><button class="btn-small" data-recruit="mage">🔮 Mage 350g</button><button class="btn-small" data-recruit="rogue">🗡️ Rog 320g</button><button class="btn-small" data-recruit="cleric">✝️ Cler 250g</button><button class="btn-small" data-recruit="archer">🏹 Arch 310g</button><button class="btn-small" data-recruit="random">🎲 Rand 200g</button></div></div>
+      <div class="info-box"><h3>🎒 PARTIES</h3><div id="partyList" style="max-height:140px;overflow-y:auto;"></div><button id="createPartyBtn">➕ Party (100g)</button><button id="autoAllBtn" class="btn-auto">🤖 Auto All</button></div>
+      <div class="info-box"><h3>🧑 RECRUIT</h3><div style="display:grid;grid-template-columns:1fr 1fr;gap:3px;"><button class="btn-small" data-recruit="warrior">⚔️ War 150g</button><button class="btn-small" data-recruit="mage">🔮 Mage 180g</button><button class="btn-small" data-recruit="rogue">🗡️ Rog 160g</button><button class="btn-small" data-recruit="cleric">✝️ Cler 130g</button><button class="btn-small" data-recruit="archer">🏹 Arch 155g</button><button class="btn-small" data-recruit="random">🎲 Rand 100g</button></div></div>
       <div class="info-box" style="flex:1;min-height:0;display:flex;flex-direction:column;"><h3>🛒 SHOP</h3><div id="shopList" style="flex:1;overflow-y:auto;"></div></div>
       <div class="log-box"><strong>📋 LOG</strong><div id="logContent">🌟 Welcome!</div></div>
     </div>
   </div>
-  <div class="bottom-bar"><button id="saveBtn">💾 Save</button><button id="exportBtn">📤 Export</button><button id="importBtn">📥 Import</button><button id="upgradeGuildBtn">🏰 Upgrade (500g)</button><button id="tutorialBtn">📖 Tutorial</button></div>
+  <div class="bottom-bar"><button id="saveBtn">💾 Save</button><button id="exportBtn">📤 Export</button><button id="importBtn">📥 Import</button><button id="upgradeGuildBtn">🏰 Upgrade (200g)</button><button id="tutorialBtn">📖 Tutorial</button></div>
 </div>
 
 <div class="modal" id="selectionModal"><div class="modal-content"><button class="close-btn" id="closeModalBtn">✕</button><h3 id="modalTitle"></h3><div id="modalOptions"></div></div></div>
 <div class="modal" id="dataModal"><div class="modal-content"><button class="close-btn" id="closeDataBtn">✕</button><h3 id="dataModalTitle"></h3><textarea class="export-area" id="dataTextarea" style="width:100%;min-height:80px;background:#0a0805;color:#c0a060;border:1px solid #5a4a30;border-radius:4px;padding:6px;font-family:monospace;font-size:10px;"></textarea><div class="copy-success" id="copySuccess" style="color:#4f4;display:none;">✅ Copied!</div><div style="margin-top:8px;display:flex;gap:6px;"><button id="dataActionBtn">📋 Copy</button><button id="dataImportBtn" style="display:none;">✅ Import</button></div></div></div>
 <div class="modal" id="guildNameModal"><div class="modal-content" style="text-align:center;"><h2 style="color:#ffd700;">🏰 Name Your Guild</h2><input type="text" class="guild-name-input" id="guildNameInput" placeholder="FALLEN STAR" maxlength="25" value="FALLEN STAR"><button id="confirmGuildName" style="font-size:14px;padding:8px 24px;">⚔️ Found Guild ⚔️</button></div></div>
 <div class="modal" id="tutorialModal"><div class="modal-content"><button class="close-btn" id="closeTutorialBtn">✕</button><h2 style="color:#ffd700;text-align:center;">📖 GUILD MASTER'S GUIDE</h2><div class="tutorial-text">
-<p><span>⚔️ CLASSES & SKILLS:</span></p><p>• <span>⚔️ Warrior</span> - Cleave: 150% damage, high DEF tank</p><p>• <span>🔮 Mage</span> - Fireball: 120% dmg + Burn 3 turns (DoT)</p><p>• <span>🗡️ Rogue</span> - Backstab: 200% critical damage</p><p>• <span>✝️ Cleric</span> - Heal: 0 damage, pure party healer</p><p>• <span>🏹 Archer</span> - Vamp Shot: 130% dmg + lifesteal</p><br>
-<p><span>📈 PROGRESSION (TRUE AFK):</span></p><p>• Quests take <span>HOURS to DAYS</span></p><p>• <span>Works when tab is closed!</span> (timestamp-based)</p><p>• Goblin Hunt: ~1h | Dragon: ~8h | Demon Lord: ~15h</p><p>• Leveling: +4 ATK, +3 DEF, +30 HP per level</p><p>• Reputation unlocks harder quests</p><br>
-<p><span>⚔️ COMBAT RULES:</span></p><p>• Kill boss before timer = SUCCESS + rewards</p><p>• Wipe or time out = FAIL, NO rewards</p><p>• Dead heroes revive after 30s</p><p>• <span>Clerics deal 0 damage</span> but keep party alive</p><br>
-<p><span>💡 TIPS & FEATURES:</span></p><p>• Click <span>[Gear]</span> to manage equipment per hero</p><p>• <span>Double-click guild name</span> to rename guild</p><p>• Click <span>★ star</span> to favorite heroes/parties</p><p>• <span>Auto-Quest</span> for idle progression</p><p>• <span>Close tab</span> - progress continues!</p><p>• Export saves regularly to backup</p>
+<p><span>⚔️ CLASSES & SKILLS:</span></p><p>• <span>⚔️ Warrior</span> - Cleave: 150% dmg, high DEF</p><p>• <span>🔮 Mage</span> - Fireball: 120% dmg + Burn</p><p>• <span>🗡️ Rogue</span> - Backstab: 200% crit</p><p>• <span>✝️ Cleric</span> - Heal: 0 dmg, pure healer</p><p>• <span>🏹 Archer</span> - Vamp Shot: lifesteal</p><br>
+<p><span>⚡ FAST-PACED QUESTS:</span></p><p>• Quests take <span>seconds to minutes</span></p><p>• Bosses are <span>much harder</span> - gear up!</p><p>• Rewards are smaller, balanced economy</p><p>• <span>Boss quests have cooldowns</span> after completion</p><p>• Dragon/Demon Lord: <span>5min cooldown</span></p><br>
+<p><span>⚔️ COMBAT:</span></p><p>• Kill boss before timer = SUCCESS</p><p>• Wipe/time out = FAIL, no rewards</p><p>• <span>Clerics deal 0 damage</span></p><br>
+<p><span>💡 FEATURES:</span></p><p>• Click <span>[Gear]</span> to manage equipment</p><p>• <span>Double-click title</span> to rename guild</p><p>• Click <span>★</span> to favorite heroes/parties</p><p>• <span>Auto-Quest</span> for idle progress</p><p>• Works when tab closed!</p>
 </div><button id="closeTutorialBtn2" style="margin-top:8px;width:100%;">⚔️ Got it!</button></div></div>
 
 <script>
@@ -195,23 +101,36 @@ No active battles...</pre>
   const HS = { warrior:['  ⚔️ ',' (🛡️)','  /│\\','   │ ','  / \\'], mage:['  🔮 ',' (✨)','  /│\\','   │ ','  / \\'], rogue:['  🗡️ ',' (💨)','  /│\\','   │ ','  / \\'], cleric:['  ✝️ ',' (💉)','  /│\\','   │ ','  / \\'], archer:['  🏹 ',' (🎯)','  /│\\','   │ ','  / \\'] };
   const CL = { warrior:{n:'Warrior',ba:8,bd:5,e:'⚔️',sk:'cleave',sn:'Cleave',sd:'150% dmg',dt:'dmg'}, mage:{n:'Mage',ba:12,bd:2,e:'🔮',sk:'fireball',sn:'Fireball',sd:'Burn 3s',dt:'dmg'}, rogue:{n:'Rogue',ba:10,bd:3,e:'🗡️',sk:'backstab',sn:'Backstab',sd:'200% crit',dt:'dmg'}, cleric:{n:'Cleric',ba:5,bd:7,e:'✝️',sk:'heal',sn:'Heal',sd:'0 dmg, heal',dt:'heal'}, archer:{n:'Archer',ba:9,bd:4,e:'🏹',sk:'lifesteal',sn:'Vamp Shot',sd:'Steal life',dt:'dmg'} };
   const NAMES = ['Aldric','Thorne','Bram','Cedric','Dorian','Elara','Fenris','Gareth','Hawke','Iris','Jorah','Kael','Lysa','Maren','Nyx','Orin','Petra','Quinn','Rowan','Soren','Talia','Ulric','Vex','Wren'];
-  const QUESTS = [ { n:'Goblin Hunt', d:2, r:80, dur:3600, i:'👺', e:'Goblin', rep:0, hp:50 }, { n:'Escort', d:1, r:40, dur:2400, i:'🛡️', e:'Bandit', rep:0, hp:30 }, { n:'Dungeon', d:5, r:250, dur:7200, i:'🕳️', e:'Skeleton', rep:50, hp:150 }, { n:'Treasure', d:4, r:180, dur:5400, i:'💎', e:'Golem', rep:35, hp:120 }, { n:'Dragon', d:10, r:800, dur:28800, i:'🐉', e:'Dragon', rep:150, hp:600 }, { n:'Dark Knight', d:8, r:500, dur:18000, i:'🦹', e:'Dark Knight', rep:100, hp:400 }, { n:'Lich Tower', d:9, r:650, dur:21600, i:'🧙', e:'Lich', rep:130, hp:500 }, { n:'Demon Lord', d:15, r:2000, dur:54000, i:'👹', e:'Demon Lord', rep:250, hp:1200 } ];
-  const EQ = { ws:{ n:'Wood Sword', ab:3, db:0, c:100, i:'🗡️' }, ia:{ n:'Iron Armor', ab:0, db:3, c:120, i:'🛡️' }, ms:{ n:'Magic Staff', ab:6, db:0, c:250, i:'🔮' }, sp:{ n:'Steel Plate', ab:0, db:5, c:220, i:'⚔️' }, lb:{ n:'Legend Blade', ab:12, db:3, c:600, i:'⭐' }, sb:{ n:'Swift Boots', ab:2, db:3, c:180, i:'👢' }, pr:{ n:'Power Ring', ab:5, db:1, c:300, i:'💍' } };
+  
+  // FAST QUESTS: seconds instead of hours, lower rewards, harder bosses
+  const QUESTS = [
+    { n:'Goblin Hunt', d:2, r:15, dur:8, i:'👺', e:'Goblin', rep:0, hp:60, cd:0 },
+    { n:'Escort', d:1, r:8, dur:5, i:'🛡️', e:'Bandit', rep:0, hp:35, cd:0 },
+    { n:'Dungeon', d:5, r:40, dur:15, i:'🕳️', e:'Skeleton', rep:30, hp:200, cd:0 },
+    { n:'Treasure', d:4, r:30, dur:12, i:'💎', e:'Golem', rep:20, hp:150, cd:0 },
+    { n:'Dragon', d:10, r:150, dur:30, i:'🐉', e:'Dragon', rep:80, hp:800, cd:300 },
+    { n:'Dark Knight', d:8, r:100, dur:25, i:'🦹', e:'Dark Knight', rep:60, hp:500, cd:180 },
+    { n:'Lich Tower', d:9, r:120, dur:28, i:'🧙', e:'Lich', rep:70, hp:650, cd:240 },
+    { n:'Demon Lord', d:15, r:350, dur:45, i:'👹', e:'Demon Lord', rep:150, hp:1500, cd:600 },
+  ];
+  
+  const EQ = { ws:{ n:'Wood Sword', ab:3, db:0, c:50, i:'🗡️' }, ia:{ n:'Iron Armor', ab:0, db:3, c:60, i:'🛡️' }, ms:{ n:'Magic Staff', ab:6, db:0, c:120, i:'🔮' }, sp:{ n:'Steel Plate', ab:0, db:5, c:100, i:'⚔️' }, lb:{ n:'Legend Blade', ab:12, db:3, c:300, i:'⭐' }, sb:{ n:'Swift Boots', ab:2, db:3, c:80, i:'👢' }, pr:{ n:'Power Ring', ab:5, db:1, c:150, i:'💍' } };
   const MAX_EQ = 3, CD = 30;
   let mc = null, ae = false, gn = 'FALLEN STAR', lastVisible = Date.now(), isTabVisible = true;
 
-  let S = { g:500, rep:0, gl:1, adv:[], pt:[], lt:Date.now(), lm:[], ac:{}, un:new Set(), dc:{}, aq:{}, favAdv:new Set(), favPt:new Set() };
+  let S = { g:200, rep:0, gl:1, adv:[], pt:[], lt:Date.now(), lm:[], ac:{}, un:new Set(), dc:{}, aq:{}, favAdv:new Set(), favPt:new Set(), qCd:{} };
 
-  document.addEventListener('visibilitychange', () => { const wh = !isTabVisible; isTabVisible = !document.hidden; if (isTabVisible && wh) { const now = Date.now(); const hd = Math.floor((now - lastVisible) / 1000); if (hd > 2) { const cy = Math.min(Math.floor(hd * 2), 100000); const wa = ae; ae = true; for (let i = 0; i < cy; i++) gloopInternal(); ae = wa; const h = Math.floor(hd / 3600); const m = Math.floor((hd % 3600) / 60); const s = hd % 60; al(`⏳ AFK ${h}h ${m}m ${s}s · Caught up!`); document.getElementById('afkBadge').style.display = 'none'; } lastVisible = Date.now(); } else if (!isTabVisible) { lastVisible = Date.now(); document.getElementById('afkBadge').style.display = 'inline-block'; } });
+  document.addEventListener('visibilitychange', () => { const wh = !isTabVisible; isTabVisible = !document.hidden; if (isTabVisible && wh) { const now = Date.now(); const hd = Math.floor((now - lastVisible) / 1000); if (hd > 2) { const cy = Math.min(Math.floor(hd * 2), 100000); const wa = ae; ae = true; for (let i = 0; i < cy; i++) gloopInternal(); ae = wa; document.getElementById('afkBadge').style.display = 'none'; al(`⏳ AFK ${fmtTime(hd)} · Caught up!`); } lastVisible = Date.now(); } else if (!isTabVisible) { lastVisible = Date.now(); document.getElementById('afkBadge').style.display = 'inline-block'; } });
 
-  function aq() { return QUESTS.filter(q=>S.rep>=q.rep); }
-  function bq(p) { const pw=p.m.reduce((s,id)=>{const a=S.adv.find(x=>x.id===id);return s+(a?a.atk+a.def:0);},0); const av=aq(); let b=null; for(let q of av){if(pw>=q.d*3&&(!b||q.d>b.d))b=q;} return b; }
-  function rn() { const av=NAMES.filter(n=>!S.un.has(n)); if(!av.length) return NAMES[Math.floor(Math.random()*NAMES.length)]+' II'; const nm=av[Math.floor(Math.random()*av.length)]; S.un.add(nm); return nm; }
-  function al(m) { S.lm.unshift(`🕒 ${new Date().toLocaleTimeString().slice(0,5)} ${m}`); if(S.lm.length>10)S.lm.pop(); document.getElementById('logContent').innerHTML=S.lm.join('<br>'); }
+  function aq() { const now = Date.now(); return QUESTS.filter(q => { if (S.rep < q.rep) return false; if (q.cd > 0 && S.qCd[q.n] && now < S.qCd[q.n]) return false; return true; }); }
+  function bq(p) { const pw = p.m.reduce((s,id)=>{const a=S.adv.find(x=>x.id===id);return s+(a?a.atk+a.def:0);},0); const av = aq(); let b = null; for(let q of av) { if(pw >= q.d * 4 && (!b || q.d > b.d)) b = q; } return b; }
+  function rn() { const av = NAMES.filter(n => !S.un.has(n)); if(!av.length) return NAMES[Math.floor(Math.random()*NAMES.length)] + ' II'; const nm = av[Math.floor(Math.random()*av.length)]; S.un.add(nm); return nm; }
+  function al(m) { S.lm.unshift(`🕒 ${new Date().toLocaleTimeString().slice(0,5)} ${m}`); if(S.lm.length>10)S.lm.pop(); document.getElementById('logContent').innerHTML = S.lm.join('<br>'); }
   function gcd(id){const c=S.dc[id];return c?Math.max(0,Math.ceil((c-Date.now())/1000)):0;}
   function icd(id){return gcd(id)>0;}
   function scd(id){S.dc[id]=Date.now()+(CD*1000);}
   function fmtTime(sec){if(sec<=0)return'0s';const h=Math.floor(sec/3600);const m=Math.floor((sec%3600)/60);const s=sec%60;if(h>0)return`${h}h ${m}m`;if(m>0)return`${m}m ${s}s`;return`${s}s`;}
+  function getQcd(qn){if(!S.qCd[qn])return 0;return Math.max(0,Math.ceil((S.qCd[qn]-Date.now())/1000));}
 
   function sm(t,o,cb){const m=document.getElementById('selectionModal');document.getElementById('modalTitle').textContent=t;const op=document.getElementById('modalOptions');op.innerHTML='';mc=cb;o.forEach(opt=>{const d=document.createElement('div');d.className='modal-option';if(opt.lk)d.classList.add('locked-quest');d.textContent=opt.lb;d.addEventListener('click',function(e){e.stopPropagation();if(!opt.lk){m.classList.remove('active');if(mc){const c=mc;mc=null;c(opt.v);}}});op.appendChild(d);});m.classList.add('active');}
   function fp(id){return S.pt.find(p=>p.m.includes(id))||null;}
@@ -220,30 +139,29 @@ No active battles...</pre>
 
   function us(adv,cm){const cd=CL[adv.class];let dmg=0,heal=0,msg='';if(cd.dt==='heal'){heal=Math.floor(adv.atk*1.5*(0.9+Math.random()*0.3));cm.mb.forEach(m=>{m.chp=Math.min(m.maxHp,m.chp+heal);});cm.th+=heal;msg=`✝️ ${adv.name} HEALS! +${heal} HP`;}else{switch(cd.sk){case'cleave':dmg=Math.floor(adv.atk*1.5*(0.8+Math.random()*0.4));msg=`⚔️ ${adv.name} CLEAVES! 💥-${dmg}`;break;case'fireball':dmg=Math.floor(adv.atk*1.2*(0.8+Math.random()*0.4));cm.mb.forEach(m=>{if(m.id===adv.id)m.bt=3;});msg=`🔥 ${adv.name} FIREBALL! 💥-${dmg}+BURN`;break;case'backstab':dmg=Math.floor(adv.atk*2.0*(0.9+Math.random()*0.3));msg=`🗡️ ${adv.name} BACKSTAB! 💢-${dmg}`;break;case'lifesteal':dmg=Math.floor(adv.atk*1.3*(0.8+Math.random()*0.4));const sh=Math.floor(dmg*0.5);cm.mb.forEach(m=>{if(m.id===adv.id)m.chp=Math.min(m.maxHp,m.chp+sh);});cm.th+=sh;msg=`💜 ${adv.name} VAMP! 💥-${dmg}+${sh}HP`;break;default:dmg=Math.floor(adv.atk*(0.7+Math.random()*0.6));msg=`${cd.e} ${adv.name} attacks! -${dmg}`;}dmg=Math.max(3,dmg);cm.ehp-=dmg;cm.td+=dmg;}return{msg,dmg,heal};}
 
-  function tc(pid){const c=S.ac[pid];if(!c||c.pw||c.ed)return;c.ms=[];c.mb.forEach(m=>{if(m.bt>0&&m.chp>0){m.chp-=6;m.bt--;c.ms.push(`🔥 ${m.name} -6 burn`);}});c.mb.forEach(m=>{if(m.chp<=0)return;c.ms.push(us(m,c).msg);});if(c.ehp<=0){c.ed=true;c.ms.push(`✨ ${c.en} defeated!`);c.mb.forEach(m=>{const a=S.adv.find(x=>x.id===m.id);if(a)a.hp=Math.min(a.maxHp,m.chp+20);});return;}const alv=c.mb.filter(m=>m.chp>0);if(alv.length>0){const t=alv[Math.floor(Math.random()*alv.length)];const q=QUESTS.find(x=>x.e===c.en);const edmg=Math.floor((q?.d||2)*5*(0.8+Math.random()*0.4));t.chp-=edmg;c.ms.push(`👹 ${c.en} 💢-${edmg} → ${t.name}`);if(t.chp<=0){c.ms.push(`💀 ${t.name} down!`);t.chp=0;}}if(c.mb.every(m=>m.chp<=0)){c.pw=true;c.ms.push('💀 PARTY WIPED!');c.mb.forEach(m=>{scd(m.id);const a=S.adv.find(x=>x.id===m.id);if(a)a.hp=0;});}}
+  function tc(pid){const c=S.ac[pid];if(!c||c.pw||c.ed)return;c.ms=[];c.mb.forEach(m=>{if(m.bt>0&&m.chp>0){m.chp-=8;m.bt--;c.ms.push(`🔥 ${m.name} -8 burn`);}});c.mb.forEach(m=>{if(m.chp<=0)return;c.ms.push(us(m,c).msg);});if(c.ehp<=0){c.ed=true;c.ms.push(`✨ ${c.en} defeated!`);c.mb.forEach(m=>{const a=S.adv.find(x=>x.id===m.id);if(a)a.hp=Math.min(a.maxHp,m.chp+20);});return;}const alv=c.mb.filter(m=>m.chp>0);if(alv.length>0){const t=alv[Math.floor(Math.random()*alv.length)];const q=QUESTS.find(x=>x.e===c.en);const edmg=Math.floor((q?.d||2)*6*(0.8+Math.random()*0.4));t.chp-=edmg;c.ms.push(`👹 ${c.en} 💢-${edmg} → ${t.name}`);if(t.chp<=0){c.ms.push(`💀 ${t.name} down!`);t.chp=0;}}if(c.mb.every(m=>m.chp<=0)){c.pw=true;c.ms.push('💀 PARTY WIPED!');c.mb.forEach(m=>{scd(m.id);const a=S.adv.find(x=>x.id===m.id);if(a)a.hp=0;});}}
 
-  function rc(){const ar=document.getElementById('combatArena');const ac=S.pt.filter(p=>p.q&&S.ac[p.id]);if(!ac.length){ar.className='combat-arena idle';ar.textContent=`⚔️ COMBAT ARENA ⚔️\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nNo battles... ${ae?'🤖 Auto mode active!':''}`;return;}ar.className='combat-arena';let sc=[];ac.forEach(p=>{const c=S.ac[p.id];if(!c)return;const at=S.aq[p.id]?' 🤖':'';const pct=Math.floor((p.pr/p.td)*100);const rs=Math.max(0,Math.ceil((p.td-p.pr)*0.5));const tleft=fmtTime(rs);let s=[];if(c.pw){s.push(`💀 ${p.n}${at} VS ${c.en} [WIPED]`);}else if(c.ed){s.push(`⚔️ ${p.n}${at} VS ${c.en} [DONE! ${pct}% · ${tleft}]`);}else{s.push(`⚔️ ${p.n}${at} VS ${c.en} [${pct}% · ${tleft}]`);}s.push('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');if(c.ed||c.pw)s.push(`👹 ${c.en}: ${c.ed?'💀 DEFEATED':'👑 SURVIVED'}`);else{const hp=Math.max(0,c.ehp/c.meh);const br='█'.repeat(Math.floor(hp*30))+'░'.repeat(30-Math.floor(hp*30));s.push(`👹 ${c.en}: [${br}] ${Math.floor(c.ehp)}/${c.meh} HP`);}s.push(`⚡ Dmg:${c.td} | 💚 Heal:${c.th}`);s.push('');const esp=ES[c.en]||ES['Goblin'];const hsp=c.mb.map(m=>HS[m.class]||HS['warrior']);for(let i=0;i<5;i++){let l='   ';l+=(esp[i]||'     ').padEnd(16);hsp.forEach(sp=>l+=(sp[i]||'     ')+' ');s.push(l);}s.push('');c.mb.forEach(m=>{const hp=Math.max(0,m.chp/m.maxHp);const br='█'.repeat(Math.floor(hp*10))+'░'.repeat(10-Math.floor(hp*10));s.push(` ${CL[m.class].e} ${m.name}: [${br}] ${m.chp<=0?'💀':'❤️'}${m.bt>0?' 🔥':''}`);});if(c.ms.length>0){s.push('');c.ms.slice(-4).forEach(m=>s.push(`  ${m}`));}sc.push(s.join('\n'));});ar.textContent=sc.join('\n\n');}
+  function rc(){const ar=document.getElementById('combatArena');const ac=S.pt.filter(p=>p.q&&S.ac[p.id]);if(!ac.length){ar.className='combat-arena idle';ar.textContent=`⚔️ COMBAT ARENA ⚔️\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nNo battles... ${ae?'🤖 Auto mode active!':''}`;return;}ar.className='combat-arena';let sc=[];ac.forEach(p=>{const c=S.ac[p.id];if(!c)return;const at=S.aq[p.id]?' 🤖':'';const pct=Math.floor((p.pr/p.td)*100);const rs=Math.max(0,Math.ceil((p.td-p.pr)*0.5));const tleft=fmtTime(rs);let s=[];if(c.pw)s.push(`💀 ${p.n}${at} VS ${c.en} [WIPED]`);else if(c.ed)s.push(`⚔️ ${p.n}${at} VS ${c.en} [DONE! ${pct}% · ${tleft}]`);else s.push(`⚔️ ${p.n}${at} VS ${c.en} [${pct}% · ${tleft}]`);s.push('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');if(c.ed||c.pw)s.push(`👹 ${c.en}: ${c.ed?'💀 DEFEATED':'👑 SURVIVED'}`);else{const hp=Math.max(0,c.ehp/c.meh);const br='█'.repeat(Math.floor(hp*30))+'░'.repeat(30-Math.floor(hp*30));s.push(`👹 ${c.en}: [${br}] ${Math.floor(c.ehp)}/${c.meh} HP`);}s.push(`⚡ Dmg:${c.td} | 💚 Heal:${c.th}`);s.push('');const esp=ES[c.en]||ES['Goblin'];const hsp=c.mb.map(m=>HS[m.class]||HS['warrior']);for(let i=0;i<5;i++){let l='   ';l+=(esp[i]||'     ').padEnd(16);hsp.forEach(sp=>l+=(sp[i]||'     ')+' ');s.push(l);}s.push('');c.mb.forEach(m=>{const hp=Math.max(0,m.chp/m.maxHp);const br='█'.repeat(Math.floor(hp*10))+'░'.repeat(10-Math.floor(hp*10));s.push(` ${CL[m.class].e} ${m.name}: [${br}] ${m.chp<=0?'💀':'❤️'}${m.bt>0?' 🔥':''}`);});if(c.ms.length>0){s.push('');c.ms.slice(-4).forEach(m=>s.push(`  ${m}`));}sc.push(s.join('\n'));});ar.textContent=sc.join('\n\n');}
 
-  function cp(nm){if(S.g<200){al('❌ Need 200g!');return;}S.g-=200;const id=Date.now();S.pt.push({id,n:nm||`P${S.pt.length+1}`,m:[],q:null,pr:0,td:0});S.aq[id]=false;al(`🎉 ${nm||'Party'} created!`);ui();}
+  function cp(nm){if(S.g<100){al('❌ Need 100g!');return;}S.g-=100;const id=Date.now();S.pt.push({id,n:nm||`P${S.pt.length+1}`,m:[],q:null,pr:0,td:0});S.aq[id]=false;al(`🎉 ${nm||'Party'} created!`);ui();}
   function asp(pid,aid){const p=S.pt.find(x=>x.id===pid);const a=S.adv.find(x=>x.id===aid);if(!p||!a)return;if(icd(aid)){al(`⚠️ ${a.name} recovering`);return;}if(p.m.length>=4){al('⚠️ Full!');return;}if(a.hp<=0){al('⚠️ Unconscious!');return;}S.pt.forEach(x=>x.m=x.m.filter(i=>i!==aid));p.m.push(aid);al(`${CL[a.class].e} ${a.name} → ${p.n}`);ui();}
   function usp(pid,aid){const p=S.pt.find(x=>x.id===pid);if(!p)return;p.m=p.m.filter(i=>i!==aid);const a=S.adv.find(x=>x.id===aid);if(a)al(`🔙 ${CL[a.class].e} ${a.name} unassigned`);ui();}
-  function sq(pid,qi){const p=S.pt.find(x=>x.id===pid);if(!p)return;if(p.q){al('⚠️ On quest!');return;}if(!p.m.length){al('⚠️ Empty!');return;}if(p.m.some(i=>icd(i))){al('⚠️ Members recovering');return;}const q=QUESTS[qi];if(!q)return;if(S.rep<q.rep){al(`⚠️ Rep ${q.rep}+`);return;}const pw=p.m.reduce((s,id)=>{const a=S.adv.find(x=>x.id===id);return s+(a?a.atk+a.def:0);},0);if(pw<q.d*3){al(`⚠️ Weak ${pw}/${q.d*3}`);return;}p.q=q;p.pr=0;p.td=q.dur;ic(pid,q);al(`⚔️ ${p.n} → ${q.i} ${q.n}`);ui();}
-  function aaq(p){if(!p||p.q||!p.m.length)return false;if(p.m.some(i=>icd(i)))return false;const b=bq(p);if(!b)return false;const qi=QUESTS.indexOf(b);if(qi>=0){p.q=b;p.pr=0;p.td=b.dur;ic(p.id,b);return true;}return false;}
+  function sq(pid,qi){const p=S.pt.find(x=>x.id===pid);if(!p)return;if(p.q){al('⚠️ On quest!');return;}if(!p.m.length){al('⚠️ Empty!');return;}if(p.m.some(i=>icd(i))){al('⚠️ Members recovering');return;}const av=aq();const q=av[qi];if(!q)return;const qcd=getQcd(q.n);if(qcd>0){al(`⚠️ ${q.n} on cooldown: ${fmtTime(qcd)}`);return;}const pw=p.m.reduce((s,id)=>{const a=S.adv.find(x=>x.id===id);return s+(a?a.atk+a.def:0);},0);if(pw<q.d*4){al(`⚠️ Weak ${pw}/${q.d*4}`);return;}p.q=q;p.pr=0;p.td=q.dur;ic(pid,q);al(`⚔️ ${p.n} → ${q.i} ${q.n}`);ui();}
+  function aaq(p){if(!p||p.q||!p.m.length)return false;if(p.m.some(i=>icd(i)))return false;const b=bq(p);if(!b)return false;const qi=aq().indexOf(b);if(qi>=0){p.q=b;p.pr=0;p.td=b.dur;ic(p.id,b);return true;}return false;}
   function taq(pid){const p=S.pt.find(x=>x.id===pid);if(!p)return;S.aq[pid]=!S.aq[pid];if(S.aq[pid]){al(`🤖 Auto ON: ${p.n}`);if(!p.q)aaq(p);}else al(`🔕 Auto OFF: ${p.n}`);ae=Object.values(S.aq).some(v=>v===true);ui();}
   function taa(){ae=!ae;if(ae){S.pt.forEach(p=>{S.aq[p.id]=true;if(!p.q)aaq(p);});al('🤖 AUTO ALL ON');}else{S.pt.forEach(p=>S.aq[p.id]=false);al('🔕 Auto off');}ui();}
   function be(aid,ek){const a=S.adv.find(x=>x.id===aid);const e=EQ[ek];if(!a||!e)return;if(S.g<e.c){al(`❌ ${e.c}g`);return;}if(a.eq.includes(ek)){al('⚠️ Equipped');return;}if(a.eq.length>=MAX_EQ){al('⚠️ Full');return;}S.g-=e.c;a.eq.push(ek);a.atk+=e.ab||0;a.def+=e.db||0;al(`🛒 ${a.name}: ${e.i}`);ui();}
   function re(aid,ek){const a=S.adv.find(x=>x.id===aid);const e=EQ[ek];if(!a||!e)return;if(!a.eq.includes(ek)){al('⚠️ Not equipped');return;}a.eq=a.eq.filter(x=>x!==ek);a.atk-=e.ab||0;a.def-=e.db||0;al(`🗑️ ${a.name}: ${e.n}`);ui();}
-  function ug(){const c=S.gl*500;if(S.g<c){al(`❌ ${c}g`);return;}S.g-=c;S.gl++;S.rep+=100;al(`🏰 Lv${S.gl}!`);ui();}
-  function rcl(cn){const cs={warrior:300,mage:350,rogue:320,cleric:250,archer:310,random:200};const c=cs[cn]||200;if(S.g<c){al(`❌ ${c}g`);return;}let rc=cn;if(cn==='random'){const ks=Object.keys(CL);rc=ks[Math.floor(Math.random()*ks.length)];}const cd=CL[rc];const nm=rn();S.g-=c;S.adv.push({id:Date.now(),name:nm,class:rc,level:1,exp:0,eq:[],atk:cd.ba,def:cd.bd,hp:100,maxHp:100});al(`🧑 ${cd.e} ${nm} (${cd.sn})`);ui();}
+  function ug(){const c=S.gl*200;if(S.g<c){al(`❌ ${c}g`);return;}S.g-=c;S.gl++;S.rep+=50;al(`🏰 Lv${S.gl}!`);ui();}
+  function rcl(cn){const cs={warrior:150,mage:180,rogue:160,cleric:130,archer:155,random:100};const c=cs[cn]||100;if(S.g<c){al(`❌ ${c}g`);return;}let rc=cn;if(cn==='random'){const ks=Object.keys(CL);rc=ks[Math.floor(Math.random()*ks.length)];}const cd=CL[rc];const nm=rn();S.g-=c;S.adv.push({id:Date.now(),name:nm,class:rc,level:1,exp:0,eq:[],atk:cd.ba,def:cd.bd,hp:100,maxHp:100});al(`🧑 ${cd.e} ${nm} (${cd.sn})`);ui();}
 
   function tfavAdv(aid){if(S.favAdv.has(aid))S.favAdv.delete(aid);else S.favAdv.add(aid);ui();}
   function tfavPt(pid){if(S.favPt.has(pid))S.favPt.delete(pid);else S.favPt.add(pid);ui();}
-
   function sae(aid){const a=S.adv.find(x=>x.id===aid);if(!a)return;if(!a.eq.length){al(`ℹ️ ${a.name} has no equipment.`);return;}const op=a.eq.map(ek=>{const e=EQ[ek];return{lb:`🗑️ Remove ${e.i} ${e.n} (+${e.ab}A +${e.db}D)`,v:{aid:a.id,ek}};});sm(`${CL[a.class].e} ${a.name}'s Equipment`,op,(d)=>re(d.aid,d.ek));}
 
-  function rq(p){const c=S.ac[p.id];if(!p.q)return;if(c&&c.pw){al(`💀 ${p.n} WIPED on ${p.q.n}!`);p.q=null;p.pr=0;delete S.ac[p.id];return;}if(p.pr>=p.td){if(c&&c.ed){const rw=p.q.r*(1+(S.gl-1)*0.15);S.g+=Math.floor(rw);S.rep+=p.q.d*8;p.m.forEach(id=>{const a=S.adv.find(x=>x.id===id);if(a&&a.hp>0){a.exp+=p.q.d*20;if(a.exp>=a.level*100){a.level++;a.exp=0;a.atk+=4;a.def+=3;a.maxHp+=30;a.hp=a.maxHp;if(!ae)al(`⭐ ${a.name} → Lv${a.level}!`);}}});if(!ae)al(`✅ ${p.n} killed ${p.q.n}! +${Math.floor(rw)}g`);}else{al(`⏰ ${p.n} FAILED ${p.q.n}! Boss survived.`);}p.q=null;p.pr=0;delete S.ac[p.id];}}
+  function rq(p){const c=S.ac[p.id];if(!p.q)return;const qn=p.q.n;if(c&&c.pw){al(`💀 ${p.n} WIPED on ${p.q.n}!`);p.q=null;p.pr=0;delete S.ac[p.id];return;}if(p.pr>=p.td){if(c&&c.ed){const rw=p.q.r*(1+(S.gl-1)*0.1);S.g+=Math.floor(rw);S.rep+=p.q.d*5;p.m.forEach(id=>{const a=S.adv.find(x=>x.id===id);if(a&&a.hp>0){a.exp+=p.q.d*15;if(a.exp>=a.level*80){a.level++;a.exp=0;a.atk+=4;a.def+=3;a.maxHp+=30;a.hp=a.maxHp;if(!ae)al(`⭐ ${a.name} → Lv${a.level}!`);}}});if(!ae)al(`✅ ${p.n} killed ${p.q.n}! +${Math.floor(rw)}g`);if(p.q.cd>0){S.qCd[qn]=Date.now()+(p.q.cd*1000);al(`⏳ ${qn} on cooldown for ${fmtTime(p.q.cd)}`);}}else{al(`⏰ ${p.n} FAILED ${p.q.n}! Boss survived.`);}p.q=null;p.pr=0;delete S.ac[p.id];}}
 
-  function gloopInternal(){Object.entries(S.dc).forEach(([id,et])=>{if(Date.now()>=et){const a=S.adv.find(x=>x.id===parseInt(id));if(a&&a.hp<=0)a.hp=Math.floor(a.maxHp*0.5);delete S.dc[id];}});S.pt.forEach(p=>{if(S.aq[p.id]&&!p.q)aaq(p);});S.pt.forEach(p=>{if(!p.q)return;const c=S.ac[p.id];if(c&&c.pw){rq(p);return;}p.pr+=1;if(p.pr%12===0&&c&&!c.ed&&!c.pw){tc(p.id);if(c.pw){rq(p);return;}}if(p.pr>=p.td)rq(p);});}
+  function gloopInternal(){Object.entries(S.dc).forEach(([id,et])=>{if(Date.now()>=et){const a=S.adv.find(x=>x.id===parseInt(id));if(a&&a.hp<=0)a.hp=Math.floor(a.maxHp*0.5);delete S.dc[id];}});S.pt.forEach(p=>{if(S.aq[p.id]&&!p.q)aaq(p);});S.pt.forEach(p=>{if(!p.q)return;const c=S.ac[p.id];if(c&&c.pw){rq(p);return;}p.pr+=1;if(p.pr%3===0&&c&&!c.ed&&!c.pw){tc(p.id);if(c.pw){rq(p);return;}}if(p.pr>=p.td)rq(p);});}
   function gloop(){gloopInternal();if(isTabVisible)ui();else S.lt=Date.now();}
 
   function getSortedAdv(){const arr=[...S.adv];arr.sort((a,b)=>{const af=S.favAdv.has(a.id)?1:0;const bf=S.favAdv.has(b.id)?1:0;return bf-af||a.name.localeCompare(b.name);});return arr;}
@@ -268,7 +186,7 @@ No active battles...</pre>
     
     pl.querySelectorAll('[data-a="as"]').forEach(b=>{b.addEventListener('click',function(e){e.stopPropagation();e.preventDefault();const pid=parseInt(this.dataset.p);const tp=S.pt.find(p=>p.id===pid);const av=S.adv.filter(a=>a.hp>0&&!icd(a.id));if(!av.length){al('❌ No available');return;}sm(`Assign to ${tp?.n}`,av.map(a=>{const cp=fp(a.id);let lb=`${CL[a.class].e} ${a.name} Lv${a.level}`;let ic=false,io=false;if(cp){if(cp.id===pid){lb+=' ✅';ic=true;}else{lb+=` ⚠️${cp.n}`;io=true;}}return{lb,v:a.id,inCurrentParty:ic,inOtherParty:io};}),(aid)=>asp(pid,aid));});});
     pl.querySelectorAll('[data-a="us"]').forEach(b=>{b.addEventListener('click',function(e){e.stopPropagation();e.preventDefault();const pid=parseInt(this.dataset.p);const p=S.pt.find(x=>x.id===pid);if(!p||!p.m.length){al('⚠️ Empty');return;}sm(`Unassign from ${p.n}`,p.m.map(id=>{const a=S.adv.find(x=>x.id===id);return{lb:`${a?CL[a.class].e+' '+a.name:'?'}`,v:id};}),(aid)=>usp(pid,aid));});});
-    pl.querySelectorAll('[data-a="sq"]').forEach(b=>{b.addEventListener('click',function(e){e.stopPropagation();e.preventDefault();const pid=parseInt(this.dataset.p);const p=S.pt.find(x=>x.id===pid);if(!p)return;if(p.q){al('⚠️ On quest');return;}if(!p.m.length){al('⚠️ Empty');return;}const av=aq();if(!av.length){al('❌ No quests');return;}sm('Quest',QUESTS.map((q,i)=>({lb:`${q.i} ${q.n} D:${q.d} ${q.r}g ${fmtTime(Math.floor(q.dur/2))} HP:${q.hp}${S.rep<q.rep?' 🔒'+q.rep:''}`,v:i,lk:S.rep<q.rep})),(qi)=>sq(pid,qi));});});
+    pl.querySelectorAll('[data-a="sq"]').forEach(b=>{b.addEventListener('click',function(e){e.stopPropagation();e.preventDefault();const pid=parseInt(this.dataset.p);const p=S.pt.find(x=>x.id===pid);if(!p)return;if(p.q){al('⚠️ On quest');return;}if(!p.m.length){al('⚠️ Empty');return;}const av=aq();if(!av.length){al('❌ No quests');return;}sm('Quest',QUESTS.map((q,i)=>{const qcd=getQcd(q.n);const cdText=qcd>0?` ⏳${fmtTime(qcd)}`:'';const avail=av.some(x=>x.n===q.n);return{lb:`${q.i} ${q.n} D:${q.d} ${q.r}g ${q.dur}s HP:${q.hp}${cdText}${!avail&&S.rep>=q.rep?' 🔒CD':''}${S.rep<q.rep?' 🔒'+q.rep:''}`,v:av.indexOf(q),lk:!avail||S.rep<q.rep};}),(qi)=>sq(pid,qi));});});
     pl.querySelectorAll('[data-a="ta"]').forEach(b=>{b.addEventListener('click',function(e){e.stopPropagation();e.preventDefault();taq(parseInt(this.dataset.p));});});
     pl.querySelectorAll('[data-a="fv"]').forEach(b=>{b.addEventListener('click',function(e){e.stopPropagation();e.preventDefault();tfavPt(parseInt(this.dataset.p));});});
     
@@ -278,10 +196,10 @@ No active battles...</pre>
     rc();
   }
 
-  function sv(){S.lt=Date.now();const ss={g:S.g,rep:S.rep,gl:S.gl,adv:S.adv,pt:S.pt.map(p=>({...p,q:null,pr:0})),lt:Date.now(),un:Array.from(S.un),dc:S.dc,aq:S.aq,gn:gn,favAdv:Array.from(S.favAdv),favPt:Array.from(S.favPt)};try{localStorage.setItem('isekaiGV27',btoa(JSON.stringify(ss)));al('💾 Saved!');}catch(e){al('❌ Save failed!');}}
-  function ex(){const ss={g:S.g,rep:S.rep,gl:S.gl,adv:S.adv,pt:S.pt.map(p=>({...p,q:null,pr:0})),lt:Date.now(),un:Array.from(S.un),dc:S.dc,aq:S.aq,gn:gn,favAdv:Array.from(S.favAdv),favPt:Array.from(S.favPt)};const d=btoa(JSON.stringify(ss));const m=document.getElementById('dataModal');document.getElementById('dataModalTitle').textContent='📤 Export';document.getElementById('dataTextarea').value=d;document.getElementById('dataActionBtn').style.display='inline-block';document.getElementById('dataImportBtn').style.display='none';document.getElementById('copySuccess').style.display='none';m.classList.add('active');document.getElementById('dataActionBtn').onclick=function(){const t=document.getElementById('dataTextarea').value;if(navigator.clipboard?.writeText){navigator.clipboard.writeText(t).then(()=>{document.getElementById('copySuccess').style.display='block';setTimeout(()=>document.getElementById('copySuccess').style.display='none',2000);al('📤 Copied!');}).catch(()=>{document.getElementById('dataTextarea').select();document.execCommand('copy');al('📤 Copied!');});}else{document.getElementById('dataTextarea').select();document.execCommand('copy');al('📤 Copied!');}};}
-  function im(){const m=document.getElementById('dataModal');document.getElementById('dataModalTitle').textContent='📥 Import';document.getElementById('dataTextarea').value='';document.getElementById('dataActionBtn').style.display='none';document.getElementById('dataImportBtn').style.display='inline-block';document.getElementById('copySuccess').style.display='none';m.classList.add('active');document.getElementById('dataImportBtn').onclick=function(){const d=document.getElementById('dataTextarea').value.trim();if(!d){al('❌ No data');return;}try{const dec=JSON.parse(atob(d));S={...S,g:dec.g||500,rep:dec.rep||0,gl:dec.gl||1,adv:dec.adv||[],pt:dec.pt||[],ac:{},un:new Set(dec.un||[]),dc:dec.dc||{},aq:dec.aq||{},lt:dec.lt||Date.now(),lm:S.lm,favAdv:new Set(dec.favAdv||[]),favPt:new Set(dec.favPt||[])};gn=dec.gn||'FALLEN STAR';document.getElementById('guildTitle').textContent=`⚔️ ${gn} ⚔️`;m.classList.remove('active');al('📥 Imported!');ui();}catch(e){al('❌ Invalid data');}};}
-  function ld(){const sv=localStorage.getItem('isekaiGV27');if(sv){try{const dec=JSON.parse(atob(sv));S={...S,g:dec.g||500,rep:dec.rep||0,gl:dec.gl||1,adv:dec.adv||[],pt:dec.pt||[],ac:{},un:new Set(dec.un||[]),dc:dec.dc||{},aq:dec.aq||{},lt:dec.lt||Date.now(),lm:S.lm,favAdv:new Set(dec.favAdv||[]),favPt:new Set(dec.favPt||[])};gn=dec.gn||'FALLEN STAR';document.getElementById('guildTitle').textContent=`⚔️ ${gn} ⚔️`;return true;}catch(e){}}return false;}
+  function sv(){S.lt=Date.now();const ss={g:S.g,rep:S.rep,gl:S.gl,adv:S.adv,pt:S.pt.map(p=>({...p,q:null,pr:0})),lt:Date.now(),un:Array.from(S.un),dc:S.dc,aq:S.aq,gn:gn,favAdv:Array.from(S.favAdv),favPt:Array.from(S.favPt),qCd:S.qCd};try{localStorage.setItem('isekaiGV28',btoa(JSON.stringify(ss)));al('💾 Saved!');}catch(e){al('❌ Save failed!');}}
+  function ex(){const ss={g:S.g,rep:S.rep,gl:S.gl,adv:S.adv,pt:S.pt.map(p=>({...p,q:null,pr:0})),lt:Date.now(),un:Array.from(S.un),dc:S.dc,aq:S.aq,gn:gn,favAdv:Array.from(S.favAdv),favPt:Array.from(S.favPt),qCd:S.qCd};const d=btoa(JSON.stringify(ss));const m=document.getElementById('dataModal');document.getElementById('dataModalTitle').textContent='📤 Export';document.getElementById('dataTextarea').value=d;document.getElementById('dataActionBtn').style.display='inline-block';document.getElementById('dataImportBtn').style.display='none';document.getElementById('copySuccess').style.display='none';m.classList.add('active');document.getElementById('dataActionBtn').onclick=function(){const t=document.getElementById('dataTextarea').value;if(navigator.clipboard?.writeText){navigator.clipboard.writeText(t).then(()=>{document.getElementById('copySuccess').style.display='block';setTimeout(()=>document.getElementById('copySuccess').style.display='none',2000);al('📤 Copied!');}).catch(()=>{document.getElementById('dataTextarea').select();document.execCommand('copy');al('📤 Copied!');});}else{document.getElementById('dataTextarea').select();document.execCommand('copy');al('📤 Copied!');}};}
+  function im(){const m=document.getElementById('dataModal');document.getElementById('dataModalTitle').textContent='📥 Import';document.getElementById('dataTextarea').value='';document.getElementById('dataActionBtn').style.display='none';document.getElementById('dataImportBtn').style.display='inline-block';document.getElementById('copySuccess').style.display='none';m.classList.add('active');document.getElementById('dataImportBtn').onclick=function(){const d=document.getElementById('dataTextarea').value.trim();if(!d){al('❌ No data');return;}try{const dec=JSON.parse(atob(d));S={...S,g:dec.g||200,rep:dec.rep||0,gl:dec.gl||1,adv:dec.adv||[],pt:dec.pt||[],ac:{},un:new Set(dec.un||[]),dc:dec.dc||{},aq:dec.aq||{},lt:dec.lt||Date.now(),lm:S.lm,favAdv:new Set(dec.favAdv||[]),favPt:new Set(dec.favPt||[]),qCd:dec.qCd||{}};gn=dec.gn||'FALLEN STAR';document.getElementById('guildTitle').textContent=`⚔️ ${gn} ⚔️`;m.classList.remove('active');al('📥 Imported!');ui();}catch(e){al('❌ Invalid data');}};}
+  function ld(){const sv=localStorage.getItem('isekaiGV28');if(sv){try{const dec=JSON.parse(atob(sv));S={...S,g:dec.g||200,rep:dec.rep||0,gl:dec.gl||1,adv:dec.adv||[],pt:dec.pt||[],ac:{},un:new Set(dec.un||[]),dc:dec.dc||{},aq:dec.aq||{},lt:dec.lt||Date.now(),lm:S.lm,favAdv:new Set(dec.favAdv||[]),favPt:new Set(dec.favPt||[]),qCd:dec.qCd||{}};gn=dec.gn||'FALLEN STAR';document.getElementById('guildTitle').textContent=`⚔️ ${gn} ⚔️`;return true;}catch(e){}}return false;}
   function op(){const d=Math.floor((Date.now()-S.lt)/1000);if(d>3){const cy=Math.min(Math.floor(d*2),100000);const wa=ae;ae=true;for(let i=0;i<cy;i++)gloopInternal();ae=wa;al(`⏳ Offline ${fmtTime(d)} · Progress caught up!`);}S.lt=Date.now();}
 
   function sgn(){document.getElementById('guildNameModal').classList.add('active');document.getElementById('guildNameInput').value=gn;document.getElementById('guildNameInput').focus();document.getElementById('guildNameInput').select();}
@@ -308,7 +226,15 @@ No active battles...</pre>
   document.getElementById('tutorialModal').addEventListener('click',function(e){if(e.target===this)this.classList.remove('active');});
 
   function init(){
-    if(!ld()){S.adv=[{id:1,name:'Aldric',class:'warrior',level:1,exp:0,eq:[],atk:8,def:5,hp:100,maxHp:100},{id:2,name:'Elara',class:'rogue',level:1,exp:0,eq:[],atk:10,def:3,hp:90,maxHp:90},{id:3,name:'Thorne',class:'mage',level:1,exp:0,eq:[],atk:12,def:2,hp:80,maxHp:80}];S.un=new Set(['Aldric','Elara','Thorne']);sgn();}
+    if(!ld()){
+      S.adv=[{id:1,name:'Aldric',class:'warrior',level:1,exp:0,eq:[],atk:8,def:5,hp:100,maxHp:100}];
+      S.un=new Set(['Aldric']);
+      // Start with a free party to avoid softlock
+      const pid = Date.now();
+      S.pt=[{id:pid,n:'Starting Party',m:[1],q:null,pr:0,td:0}];
+      S.aq[pid]=false;
+      sgn();
+    }
     document.getElementById('guildTitle').textContent=`⚔️ ${gn} ⚔️`;
     op();ui();setInterval(gloop,500);setInterval(sv,15000);
   }
