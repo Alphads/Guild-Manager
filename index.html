@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>⚔️ ISEKAI GUILD MANAGER · WORKING</title>
+  <title>⚔️ ISEKAI GUILD MANAGER · AFK WORKS</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     ::-webkit-scrollbar { width: 8px; height: 8px; }
@@ -65,7 +65,7 @@
 No battles...</pre>
     </div>
     <div class="right-panel">
-      <div class="info-box"><h3>🏰 GUILD</h3><div class="resource-row"><span>🪙 Gold</span><span id="goldAmount">50</span></div><div class="resource-row"><span>⭐ Rep</span><span id="repAmount">0</span></div><div class="resource-row"><span>📊 Lv</span><span id="guildLevel">1</span></div></div>
+      <div class="info-box"><h3>🏰 GUILD <span class="afk-badge" id="afkBadge" style="display:none;">AFK</span></h3><div class="resource-row"><span>🪙 Gold</span><span id="goldAmount">50</span></div><div class="resource-row"><span>⭐ Rep</span><span id="repAmount">0</span></div><div class="resource-row"><span>📊 Lv</span><span id="guildLevel">1</span></div></div>
       <div class="info-box"><h3>🎒 PARTIES</h3><div id="partyList" style="max-height:140px;overflow-y:auto;"></div><button id="createPartyBtn">➕ Party (100g)</button><button id="autoAllBtn" class="btn-auto">🤖 Auto All</button></div>
       <div class="info-box"><h3>🧑 RECRUIT</h3><div style="display:grid;grid-template-columns:1fr 1fr;gap:3px;"><button class="btn-small" data-recruit="warrior">⚔️ War 150g</button><button class="btn-small" data-recruit="mage">🔮 Mage 180g</button><button class="btn-small" data-recruit="rogue">🗡️ Rog 160g</button><button class="btn-small" data-recruit="cleric">✝️ Cler 130g</button><button class="btn-small" data-recruit="archer">🏹 Arch 155g</button><button class="btn-small" data-recruit="random">🎲 Rand 100g</button></div></div>
       <div class="info-box" style="flex:1;min-height:0;display:flex;flex-direction:column;"><h3>🛒 SHOP</h3><div id="shopList" style="flex:1;overflow-y:auto;"></div></div>
@@ -83,32 +83,73 @@ No battles...</pre>
 <p><span style="color:#ffd700;">👥 PARTIES:</span> Create party → 👤Assign heroes → 📜Send on quest</p>
 <p><span style="color:#ffd700;">⚡ POWER:</span> ATK+DEF. Must meet Req⚡ to win. Kill boss before timer!</p>
 <p><span style="color:#ffd700;">🤖 AUTO:</span> Toggle 🤖 per party or Auto All. Works when tab closed!</p>
+<p><span style="color:#ffd700;">⏳ AFK:</span> Progress continues when you close the tab or switch away!</p>
 <p><span style="color:#ffd700;">⚔️ CLASSES:</span> Warrior(Cleave) Mage(Fireball) Rogue(Backstab) Cleric(Heal/0dmg) Archer(Vamp)</p>
 <p><span style="color:#ffd700;">💡 TIPS:</span> Click [Gear] for equipment. Double-click title to rename.</p>
 </div><button id="closeTutorialBtn2" style="margin-top:8px;width:100%;">⚔️ Got it!</button></div></div>
 
 <script>
 (function() {
-  const ES = { 'Goblin':['   👺','  (⚔️)','  /│\\','   │','  / \\'], 'Skeleton':['   💀','  (🦴)','  /│\\','   │','  / \\'], 'Dragon':['   🐉','  (🔥)',' /🐉\\','  ││','  ╚╝'], 'Bandit':['   🥷','  (🗡️)','  /│\\','   │','  / \\'], 'Golem':['   🗿','  (💎)','  /│\\','  ║║','  ═╝'], 'Demon Lord':['   👹','  (👑)',' /🔥\\','  ║║','  ╚╝'], 'Dark Knight':['   🦹','  (⚔️)','  /▓\\','   ║','  / \\'], 'Lich':['   🧙','  (💀)',' /☠️\\','  ║','  / \\'] };
-  const HS = { warrior:['  ⚔️ ',' (🛡️)','  /│\\','   │ ','  / \\'], mage:['  🔮 ',' (✨)','  /│\\','   │ ','  / \\'], rogue:['  🗡️ ',' (💨)','  /│\\','   │ ','  / \\'], cleric:['  ✝️ ',' (💉)','  /│\\','   │ ','  / \\'], archer:['  🏹 ',' (🎯)','  /│\\','   │ ','  / \\'] };
-  const CL = { warrior:{n:'Warrior',ba:8,bd:5,e:'⚔️',sk:'cleave',dt:'dmg'}, mage:{n:'Mage',ba:12,bd:2,e:'🔮',sk:'fireball',dt:'dmg'}, rogue:{n:'Rogue',ba:10,bd:3,e:'🗡️',sk:'backstab',dt:'dmg'}, cleric:{n:'Cleric',ba:5,bd:7,e:'✝️',sk:'heal',dt:'heal'}, archer:{n:'Archer',ba:9,bd:4,e:'🏹',sk:'lifesteal',dt:'dmg'} };
+  // ============ DATA ============
+  const ES = {
+    'Goblin':['   👺','  (⚔️)','  /│\\','   │','  / \\'],
+    'Skeleton':['   💀','  (🦴)','  /│\\','   │','  / \\'],
+    'Dragon':['   🐉','  (🔥)',' /🐉\\','  ││','  ╚╝'],
+    'Bandit':['   🥷','  (🗡️)','  /│\\','   │','  / \\'],
+    'Golem':['   🗿','  (💎)','  /│\\','  ║║','  ═╝'],
+    'Demon Lord':['   👹','  (👑)',' /🔥\\','  ║║','  ╚╝'],
+    'Dark Knight':['   🦹','  (⚔️)','  /▓\\','   ║','  / \\'],
+    'Lich':['   🧙','  (💀)',' /☠️\\','  ║','  / \\']
+  };
+  const HS = {
+    warrior:['  ⚔️ ',' (🛡️)','  /│\\','   │ ','  / \\'],
+    mage:['  🔮 ',' (✨)','  /│\\','   │ ','  / \\'],
+    rogue:['  🗡️ ',' (💨)','  /│\\','   │ ','  / \\'],
+    cleric:['  ✝️ ',' (💉)','  /│\\','   │ ','  / \\'],
+    archer:['  🏹 ',' (🎯)','  /│\\','   │ ','  / \\']
+  };
+  const CL = {
+    warrior:{n:'Warrior',ba:8,bd:5,e:'⚔️',sk:'cleave',dt:'dmg'},
+    mage:{n:'Mage',ba:12,bd:2,e:'🔮',sk:'fireball',dt:'dmg'},
+    rogue:{n:'Rogue',ba:10,bd:3,e:'🗡️',sk:'backstab',dt:'dmg'},
+    cleric:{n:'Cleric',ba:5,bd:7,e:'✝️',sk:'heal',dt:'heal'},
+    archer:{n:'Archer',ba:9,bd:4,e:'🏹',sk:'lifesteal',dt:'dmg'}
+  };
   const NAMES = ['Aldric','Thorne','Bram','Cedric','Dorian','Elara','Fenris','Gareth','Hawke','Iris','Jorah','Kael','Lysa','Maren','Nyx','Orin'];
   const QUESTS = [
-    { n:'Goblin Hunt', d:2, r:15, dur:12, i:'👺', e:'Goblin', rep:0, hp:40, cd:0 }, { n:'Escort', d:1, r:8, dur:10, i:'🛡️', e:'Bandit', rep:0, hp:25, cd:0 },
-    { n:'Dungeon', d:5, r:50, dur:25, i:'🕳️', e:'Skeleton', rep:150, hp:120, cd:60 }, { n:'Treasure', d:4, r:35, dur:20, i:'💎', e:'Golem', rep:100, hp:90, cd:30 },
-    { n:'Dragon', d:10, r:200, dur:50, i:'🐉', e:'Dragon', rep:500, hp:400, cd:86400 }, { n:'Dark Knight', d:8, r:120, dur:40, i:'🦹', e:'Dark Knight', rep:350, hp:280, cd:43200 },
-    { n:'Lich Tower', d:9, r:160, dur:45, i:'🧙', e:'Lich', rep:400, hp:340, cd:21600 }, { n:'Demon Lord', d:15, r:500, dur:70, i:'👹', e:'Demon Lord', rep:800, hp:700, cd:3600 }
+    { n:'Goblin Hunt', d:2, r:15, dur:12, i:'👺', e:'Goblin', rep:0, hp:40, cd:0 },
+    { n:'Escort', d:1, r:8, dur:10, i:'🛡️', e:'Bandit', rep:0, hp:25, cd:0 },
+    { n:'Dungeon', d:5, r:50, dur:25, i:'🕳️', e:'Skeleton', rep:150, hp:120, cd:60 },
+    { n:'Treasure', d:4, r:35, dur:20, i:'💎', e:'Golem', rep:100, hp:90, cd:30 },
+    { n:'Dragon', d:10, r:200, dur:50, i:'🐉', e:'Dragon', rep:500, hp:400, cd:86400 },
+    { n:'Dark Knight', d:8, r:120, dur:40, i:'🦹', e:'Dark Knight', rep:350, hp:280, cd:43200 },
+    { n:'Lich Tower', d:9, r:160, dur:45, i:'🧙', e:'Lich', rep:400, hp:340, cd:21600 },
+    { n:'Demon Lord', d:15, r:500, dur:70, i:'👹', e:'Demon Lord', rep:800, hp:700, cd:3600 }
   ];
-  const EQ = { ws:{ n:'Wood Sword', ab:3, db:0, c:50, i:'🗡️' }, ia:{ n:'Iron Armor', ab:0, db:3, c:60, i:'🛡️' }, ms:{ n:'Magic Staff', ab:6, db:0, c:150, i:'🔮' }, sp:{ n:'Steel Plate', ab:0, db:5, c:130, i:'⚔️' }, lb:{ n:'Legend Blade', ab:12, db:3, c:400, i:'⭐' }, sb:{ n:'Swift Boots', ab:2, db:3, c:100, i:'👢' }, pr:{ n:'Power Ring', ab:5, db:1, c:200, i:'💍' } };
+  const EQ = {
+    ws:{ n:'Wood Sword', ab:3, db:0, c:50, i:'🗡️' },
+    ia:{ n:'Iron Armor', ab:0, db:3, c:60, i:'🛡️' },
+    ms:{ n:'Magic Staff', ab:6, db:0, c:150, i:'🔮' },
+    sp:{ n:'Steel Plate', ab:0, db:5, c:130, i:'⚔️' },
+    lb:{ n:'Legend Blade', ab:12, db:3, c:400, i:'⭐' },
+    sb:{ n:'Swift Boots', ab:2, db:3, c:100, i:'👢' },
+    pr:{ n:'Power Ring', ab:5, db:1, c:200, i:'💍' }
+  };
   const MAX_EQ = 3;
-  let mc = null, ae = false, gn = 'FALLEN STAR';
-  let S = { g:50, rep:0, gl:1, adv:[], pt:[], lt:Date.now(), lm:[], ac:{}, un:new Set(), dc:{}, aq:{}, qCd:{} };
 
+  // ============ STATE ============
+  let mc = null, ae = false, gn = 'FALLEN STAR';
+  let S = {
+    g:50, rep:0, gl:1, adv:[], pt:[], lt:Date.now(),
+    lm:[], ac:{}, un:new Set(), dc:{}, aq:{}, qCd:{}
+  };
+
+  // ============ HELPERS ============
   function getPartyPower(p) { return p.m.reduce((s,id)=>{const a=S.adv.find(x=>x.id===id);return s+(a?a.atk+a.def:0);},0); }
   function getQuestReq(q) { return q.d * 4; }
-  function aq() { const now = Date.now(); return QUESTS.filter(q => S.rep>=q.rep && (!q.cd||!S.qCd[q.n]||now>=S.qCd[q.n])); }
-  function bq(p) { const pw = getPartyPower(p); const av = aq(); let b = null; for(let q of av) if(pw>=getQuestReq(q)&&(!b||q.d>b.d)) b=q; return b; }
-  function rn() { const av = NAMES.filter(n=>!S.un.has(n)); if(!av.length) return NAMES[Math.floor(Math.random()*NAMES.length)]+' II'; const nm=av[Math.floor(Math.random()*av.length)]; S.un.add(nm); return nm; }
+  function aq() { const now=Date.now(); return QUESTS.filter(q=>S.rep>=q.rep&&(!q.cd||!S.qCd[q.n]||now>=S.qCd[q.n])); }
+  function bq(p) { const pw=getPartyPower(p); const av=aq(); let b=null; for(let q of av) if(pw>=getQuestReq(q)&&(!b||q.d>b.d)) b=q; return b; }
+  function rn() { const av=NAMES.filter(n=>!S.un.has(n)); if(!av.length) return NAMES[Math.floor(Math.random()*NAMES.length)]+' II'; const nm=av[Math.floor(Math.random()*av.length)]; S.un.add(nm); return nm; }
   function al(m) { S.lm.unshift(`🕒 ${new Date().toLocaleTimeString().slice(0,5)} ${m}`); if(S.lm.length>10)S.lm.pop(); document.getElementById('logContent').innerHTML=S.lm.join('<br>'); }
   function gcd(id){const c=S.dc[id];return c?Math.max(0,Math.ceil((c-Date.now())/1000)):0;}
   function icd(id){return gcd(id)>0;}
@@ -116,15 +157,81 @@ No battles...</pre>
   function fmtTime(sec){if(sec<=0)return'0s';if(sec>=86400)return Math.floor(sec/86400)+'d';const h=Math.floor(sec/3600);const m=Math.floor((sec%3600)/60);const s=sec%60;if(h>0)return`${h}h ${m}m`;if(m>0)return`${m}m ${s}s`;return`${s}s`;}
   function getQcd(qn){if(!S.qCd[qn])return 0;return Math.max(0,Math.ceil((S.qCd[qn]-Date.now())/1000));}
 
-  function sm(t,o,cb){const m=document.getElementById('selectionModal');document.getElementById('modalTitle').textContent=t;const op=document.getElementById('modalOptions');op.innerHTML='';mc=cb;o.forEach(opt=>{const d=document.createElement('div');d.className='modal-option';if(opt.lk)d.classList.add('locked-quest');d.textContent=opt.lb;d.addEventListener('click',function(e){e.stopPropagation();if(!opt.lk){m.classList.remove('active');if(mc){const c=mc;mc=null;c(opt.v);}}});op.appendChild(d);});m.classList.add('active');}
+  // ============ MODAL ============
+  function sm(t,o,cb){
+    const m=document.getElementById('selectionModal');
+    document.getElementById('modalTitle').textContent=t;
+    const op=document.getElementById('modalOptions');
+    op.innerHTML=''; mc=cb;
+    o.forEach(opt=>{
+      const d=document.createElement('div');
+      d.className='modal-option';
+      if(opt.lk) d.classList.add('locked-quest');
+      d.textContent=opt.lb;
+      d.onclick=function(e){e.stopPropagation();if(!opt.lk){m.classList.remove('active');if(mc){const c=mc;mc=null;c(opt.v);}}};
+      op.appendChild(d);
+    });
+    m.classList.add('active');
+  }
   function fp(id){return S.pt.find(p=>p.m.includes(id))||null;}
 
+  // ============ COMBAT ============
   function ic(pid,q){const p=S.pt.find(x=>x.id===pid);if(!p)return;const mb=p.m.map(id=>S.adv.find(a=>a.id===id)).filter(a=>a&&a.hp>0);S.ac[pid]={en:q.e,ehp:q.hp,meh:q.hp,mb:mb.map(m=>({...m,chp:m.hp,bt:0})),ms:[],pw:false,ed:false,td:0,th:0};}
-  function us(adv,cm){const cd=CL[adv.class];let dmg=0,heal=0,msg='';if(cd.dt==='heal'){heal=Math.floor(adv.atk*1.2*(0.8+Math.random()*0.4));cm.mb.forEach(m=>{m.chp=Math.min(m.maxHp,m.chp+heal);});cm.th+=heal;msg=`✝️ ${adv.name} HEALS! +${heal}`;}else{switch(cd.sk){case'cleave':dmg=Math.floor(adv.atk*1.3*(0.7+Math.random()*0.4));msg=`⚔️ ${adv.name} CLEAVES! -${dmg}`;break;case'fireball':dmg=Math.floor(adv.atk*1.1*(0.7+Math.random()*0.4));cm.mb.forEach(m=>{if(m.id===adv.id)m.bt=3;});msg=`🔥 ${adv.name} FIREBALL! -${dmg}+BURN`;break;case'backstab':dmg=Math.floor(adv.atk*1.6*(0.8+Math.random()*0.3));msg=`🗡️ ${adv.name} BACKSTAB! -${dmg}`;break;case'lifesteal':dmg=Math.floor(adv.atk*1.2*(0.7+Math.random()*0.4));const sh=Math.floor(dmg*0.4);cm.mb.forEach(m=>{if(m.id===adv.id)m.chp=Math.min(m.maxHp,m.chp+sh);});cm.th+=sh;msg=`💜 ${adv.name} VAMP! -${dmg}+${sh}HP`;break;default:dmg=Math.floor(adv.atk*0.9*(0.7+Math.random()*0.4));msg=`${cd.e} ${adv.name} attacks! -${dmg}`;}dmg=Math.max(3,dmg);cm.ehp-=dmg;cm.td+=dmg;}return{msg,dmg,heal};}
-  function tc(pid){const c=S.ac[pid];if(!c||c.pw||c.ed)return;c.ms=[];c.mb.forEach(m=>{if(m.bt>0&&m.chp>0){m.chp-=5;m.bt--;c.ms.push(`🔥 ${m.name} -5 burn`);}});c.mb.forEach(m=>{if(m.chp<=0)return;c.ms.push(us(m,c).msg);});if(c.ehp<=0){c.ed=true;c.ms.push(`✨ ${c.en} defeated!`);c.mb.forEach(m=>{const a=S.adv.find(x=>x.id===m.id);if(a)a.hp=Math.min(a.maxHp,m.chp+15);});return;}const alv=c.mb.filter(m=>m.chp>0);if(alv.length>0){const t=alv[Math.floor(Math.random()*alv.length)];const q=QUESTS.find(x=>x.e===c.en);const edmg=Math.floor((q?.d||2)*3*(0.7+Math.random()*0.4));t.chp-=edmg;c.ms.push(`👹 ${c.en} -${edmg} → ${t.name}`);if(t.chp<=0){c.ms.push(`💀 ${t.name} down!`);t.chp=0;}}if(c.mb.every(m=>m.chp<=0)){c.pw=true;c.ms.push('💀 WIPED!');c.mb.forEach(m=>{scd(m.id);const a=S.adv.find(x=>x.id===m.id);if(a)a.hp=0;});}}
+  function us(adv,cm){
+    const cd=CL[adv.class];let dmg=0,heal=0,msg='';
+    if(cd.dt==='heal'){
+      heal=Math.floor(adv.atk*1.2*(0.8+Math.random()*0.4));
+      cm.mb.forEach(m=>{m.chp=Math.min(m.maxHp,m.chp+heal);});
+      cm.th+=heal; msg=`✝️ ${adv.name} HEALS! +${heal}`;
+    } else {
+      switch(cd.sk){
+        case'cleave':dmg=Math.floor(adv.atk*1.3*(0.7+Math.random()*0.4));msg=`⚔️ ${adv.name} CLEAVES! -${dmg}`;break;
+        case'fireball':dmg=Math.floor(adv.atk*1.1*(0.7+Math.random()*0.4));cm.mb.forEach(m=>{if(m.id===adv.id)m.bt=3;});msg=`🔥 ${adv.name} FIREBALL! -${dmg}+BURN`;break;
+        case'backstab':dmg=Math.floor(adv.atk*1.6*(0.8+Math.random()*0.3));msg=`🗡️ ${adv.name} BACKSTAB! -${dmg}`;break;
+        case'lifesteal':dmg=Math.floor(adv.atk*1.2*(0.7+Math.random()*0.4));const sh=Math.floor(dmg*0.4);cm.mb.forEach(m=>{if(m.id===adv.id)m.chp=Math.min(m.maxHp,m.chp+sh);});cm.th+=sh;msg=`💜 ${adv.name} VAMP! -${dmg}+${sh}HP`;break;
+        default:dmg=Math.floor(adv.atk*0.9*(0.7+Math.random()*0.4));msg=`${cd.e} ${adv.name} attacks! -${dmg}`;
+      }
+      dmg=Math.max(3,dmg); cm.ehp-=dmg; cm.td+=dmg;
+    }
+    return{msg,dmg,heal};
+  }
+  function tc(pid){
+    const c=S.ac[pid]; if(!c||c.pw||c.ed)return; c.ms=[];
+    c.mb.forEach(m=>{if(m.bt>0&&m.chp>0){m.chp-=5;m.bt--;c.ms.push(`🔥 ${m.name} -5 burn`);}});
+    c.mb.forEach(m=>{if(m.chp<=0)return;c.ms.push(us(m,c).msg);});
+    if(c.ehp<=0){c.ed=true;c.ms.push(`✨ ${c.en} defeated!`);c.mb.forEach(m=>{const a=S.adv.find(x=>x.id===m.id);if(a)a.hp=Math.min(a.maxHp,m.chp+15);});return;}
+    const alv=c.mb.filter(m=>m.chp>0);
+    if(alv.length>0){const t=alv[Math.floor(Math.random()*alv.length)];const q=QUESTS.find(x=>x.e===c.en);const edmg=Math.floor((q?.d||2)*3*(0.7+Math.random()*0.4));t.chp-=edmg;c.ms.push(`👹 ${c.en} -${edmg} → ${t.name}`);if(t.chp<=0){c.ms.push(`💀 ${t.name} down!`);t.chp=0;}}
+    if(c.mb.every(m=>m.chp<=0)){c.pw=true;c.ms.push('💀 WIPED!');c.mb.forEach(m=>{scd(m.id);const a=S.adv.find(x=>x.id===m.id);if(a)a.hp=0;});}
+  }
 
-  function rc(){const ar=document.getElementById('combatArena');const ac=S.pt.filter(p=>p.q&&S.ac[p.id]);if(!ac.length){ar.className='combat-arena idle';ar.textContent=`⚔️ COMBAT ARENA ⚔️\nNo battles...`;return;}ar.className='combat-arena';let sc=[];ac.forEach(p=>{const c=S.ac[p.id];if(!c)return;const pct=Math.floor((p.pr/p.td)*100);const rs=Math.ceil((p.td-p.pr)*0.5);let s=[];if(c.pw)s.push(`💀 ${p.n} VS ${c.en} [WIPED]`);else if(c.ed)s.push(`⚔️ ${p.n} VS ${c.en} [DONE!]`);else s.push(`⚔️ ${p.n} VS ${c.en} [${pct}% · ${fmtTime(rs)}]`);s.push('━━━━━━━━━━━━━━━━');if(c.ed||c.pw)s.push(`👹 ${c.en}: ${c.ed?'💀 DEFEATED':'👑 SURVIVED'}`);else{const hp=Math.max(0,c.ehp/c.meh);const br='█'.repeat(Math.floor(hp*20))+'░'.repeat(20-Math.floor(hp*20));s.push(`👹 ${c.en}: [${br}] ${Math.floor(c.ehp)}/${c.meh}`);}s.push('');const esp=ES[c.en]||ES['Goblin'];const hsp=c.mb.map(m=>HS[m.class]||HS['warrior']);for(let i=0;i<5;i++){let l='   ';l+=(esp[i]||'     ').padEnd(16);hsp.forEach(sp=>l+=(sp[i]||'     ')+' ');s.push(l);}s.push('');c.mb.forEach(m=>{const hp=Math.max(0,m.chp/m.maxHp);const br='█'.repeat(Math.floor(hp*10))+'░'.repeat(10-Math.floor(hp*10));s.push(` ${CL[m.class].e} ${m.name}: [${br}] ${m.chp<=0?'💀':'❤️'}${m.bt>0?' 🔥':''}`);});if(c.ms.length>0){s.push('');c.ms.slice(-3).forEach(m=>s.push(`  ${m}`));}sc.push(s.join('\n'));});ar.textContent=sc.join('\n\n');}
+  function rc(){
+    const ar=document.getElementById('combatArena');
+    const ac=S.pt.filter(p=>p.q&&S.ac[p.id]);
+    if(!ac.length){ar.className='combat-arena idle';ar.textContent=`⚔️ COMBAT ARENA ⚔️\nNo battles...`;return;}
+    ar.className='combat-arena'; let sc=[];
+    ac.forEach(p=>{
+      const c=S.ac[p.id]; if(!c)return;
+      const pct=Math.floor((p.pr/p.td)*100); const rs=Math.ceil((p.td-p.pr)*0.5);
+      let s=[];
+      if(c.pw)s.push(`💀 ${p.n} VS ${c.en} [WIPED]`);
+      else if(c.ed)s.push(`⚔️ ${p.n} VS ${c.en} [DONE!]`);
+      else s.push(`⚔️ ${p.n} VS ${c.en} [${pct}% · ${fmtTime(rs)}]`);
+      s.push('━━━━━━━━━━━━━━━━');
+      if(c.ed||c.pw)s.push(`👹 ${c.en}: ${c.ed?'💀 DEFEATED':'👑 SURVIVED'}`);
+      else{const hp=Math.max(0,c.ehp/c.meh);const br='█'.repeat(Math.floor(hp*20))+'░'.repeat(20-Math.floor(hp*20));s.push(`👹 ${c.en}: [${br}] ${Math.floor(c.ehp)}/${c.meh}`);}
+      s.push('');
+      const esp=ES[c.en]||ES['Goblin']; const hsp=c.mb.map(m=>HS[m.class]||HS['warrior']);
+      for(let i=0;i<5;i++){let l='   ';l+=(esp[i]||'     ').padEnd(16);hsp.forEach(sp=>l+=(sp[i]||'     ')+' ');s.push(l);}
+      s.push('');
+      c.mb.forEach(m=>{const hp=Math.max(0,m.chp/m.maxHp);const br='█'.repeat(Math.floor(hp*10))+'░'.repeat(10-Math.floor(hp*10));s.push(` ${CL[m.class].e} ${m.name}: [${br}] ${m.chp<=0?'💀':'❤️'}${m.bt>0?' 🔥':''}`);});
+      if(c.ms.length>0){s.push('');c.ms.slice(-3).forEach(m=>s.push(`  ${m}`));}
+      sc.push(s.join('\n'));
+    });
+    ar.textContent=sc.join('\n\n');
+  }
 
+  // ============ ACTIONS ============
   function cp(nm){if(S.g<100){al('❌ Need 100g!');return;}S.g-=100;const id=Date.now();S.pt.push({id,n:nm||`P${S.pt.length+1}`,m:[],q:null,pr:0,td:0});S.aq[id]=false;al(`🎉 ${nm||'Party'} created!`);ui();}
   function asp(pid,aid){const p=S.pt.find(x=>x.id===pid);const a=S.adv.find(x=>x.id===aid);if(!p||!a)return;if(icd(aid)){al(`⚠️ ${a.name} recovering`);return;}if(p.m.length>=4){al('⚠️ Full!');return;}if(a.hp<=0){al('⚠️ Unconscious!');return;}S.pt.forEach(x=>x.m=x.m.filter(i=>i!==aid));p.m.push(aid);al(`${CL[a.class].e} ${a.name} → ${p.n}`);ui();}
   function usp(pid,aid){const p=S.pt.find(x=>x.id===pid);if(!p)return;p.m=p.m.filter(i=>i!==aid);const a=S.adv.find(x=>x.id===aid);if(a)al(`🔙 ${a.name} unassigned`);ui();}
@@ -138,10 +245,36 @@ No battles...</pre>
   function rcl(cn){const cs={warrior:150,mage:180,rogue:160,cleric:130,archer:155,random:100};const c=cs[cn]||100;if(S.g<c){al(`❌ ${c}g`);return;}let rc=cn;if(cn==='random'){const ks=Object.keys(CL);rc=ks[Math.floor(Math.random()*ks.length)];}const cd=CL[rc];const nm=rn();S.g-=c;S.adv.push({id:Date.now(),name:nm,class:rc,level:1,exp:0,eq:[],atk:cd.ba,def:cd.bd,hp:100,maxHp:100});al(`🧑 ${cd.e} ${nm}`);ui();}
   function sae(aid){const a=S.adv.find(x=>x.id===aid);if(!a)return;if(!a.eq.length){al(`ℹ️ No equipment`);return;}const op=a.eq.map(ek=>{const e=EQ[ek];return{lb:`🗑️ Remove ${e.i} ${e.n}`,v:{aid:a.id,ek}};});sm(`${a.name}'s Gear`,op,(d)=>re(d.aid,d.ek));}
 
-  function rq(p){const c=S.ac[p.id];if(!p.q)return;const qn=p.q.n;if(c&&c.pw){al(`💀 ${p.n} WIPED!`);p.q=null;p.pr=0;delete S.ac[p.id];return;}if(p.pr>=p.td){if(c&&c.ed){const rw=p.q.r*(1+(S.gl-1)*0.1);S.g+=Math.floor(rw);S.rep+=p.q.d*3;p.m.forEach(id=>{const a=S.adv.find(x=>x.id===id);if(a&&a.hp>0){a.exp+=p.q.d*10;if(a.exp>=a.level*120){a.level++;a.exp=0;a.atk+=3;a.def+=2;a.maxHp+=20;a.hp=a.maxHp;if(!ae)al(`⭐ ${a.name} → Lv${a.level}!`);}}});if(!ae)al(`✅ ${p.n}: +${Math.floor(rw)}g`);if(p.q.cd>0){S.qCd[qn]=Date.now()+(p.q.cd*1000);}}else{al(`⏰ ${p.n} FAILED!`);}p.q=null;p.pr=0;delete S.ac[p.id];}}
+  function rq(p){
+    const c=S.ac[p.id]; if(!p.q)return; const qn=p.q.n;
+    if(c&&c.pw){al(`💀 ${p.n} WIPED!`);p.q=null;p.pr=0;delete S.ac[p.id];return;}
+    if(p.pr>=p.td){
+      if(c&&c.ed){
+        const rw=p.q.r*(1+(S.gl-1)*0.1); S.g+=Math.floor(rw); S.rep+=p.q.d*3;
+        p.m.forEach(id=>{const a=S.adv.find(x=>x.id===id);if(a&&a.hp>0){a.exp+=p.q.d*10;if(a.exp>=a.level*120){a.level++;a.exp=0;a.atk+=3;a.def+=2;a.maxHp+=20;a.hp=a.maxHp;if(!ae)al(`⭐ ${a.name} → Lv${a.level}!`);}}});
+        if(!ae)al(`✅ ${p.n}: +${Math.floor(rw)}g`);
+        if(p.q.cd>0){S.qCd[qn]=Date.now()+(p.q.cd*1000);}
+      } else {al(`⏰ ${p.n} FAILED!`);}
+      p.q=null; p.pr=0; delete S.ac[p.id];
+    }
+  }
 
-  function gloop(){Object.entries(S.dc).forEach(([id,et])=>{if(Date.now()>=et){const a=S.adv.find(x=>x.id===parseInt(id));if(a&&a.hp<=0){a.hp=a.maxHp;delete S.dc[id];}}});S.pt.forEach(p=>{if(S.aq[p.id]&&!p.q)aaq(p);});S.pt.forEach(p=>{if(!p.q)return;const c=S.ac[p.id];if(c&&c.pw){rq(p);return;}p.pr+=1;if(p.pr%2===0&&c&&!c.ed&&!c.pw){tc(p.id);if(c.pw){rq(p);return;}}if(p.pr>=p.td)rq(p);});ui();}
+  // ============ GAME LOOP ============
+  function gloopInternal(){
+    Object.entries(S.dc).forEach(([id,et])=>{if(Date.now()>=et){const a=S.adv.find(x=>x.id===parseInt(id));if(a&&a.hp<=0){a.hp=a.maxHp;delete S.dc[id];}}});
+    S.pt.forEach(p=>{if(S.aq[p.id]&&!p.q)aaq(p);});
+    S.pt.forEach(p=>{
+      if(!p.q)return; const c=S.ac[p.id];
+      if(c&&c.pw){rq(p);return;}
+      p.pr+=1;
+      if(p.pr%2===0&&c&&!c.ed&&!c.pw){tc(p.id);if(c.pw){rq(p);return;}}
+      if(p.pr>=p.td)rq(p);
+    });
+    S.lt=Date.now();
+  }
+  function gloop(){gloopInternal();ui();}
 
+  // ============ UI ============
   function getSortedAdv(){return [...S.adv].sort((a,b)=>a.name.localeCompare(b.name));}
   function getSortedPt(){return [...S.pt].sort((a,b)=>a.n.localeCompare(b.n));}
 
@@ -160,63 +293,94 @@ No battles...</pre>
     const pl=document.getElementById('partyList');
     pl.innerHTML=getSortedPt().map(p=>{const mb=p.m.map(id=>{const a=S.adv.find(x=>x.id===id);return a?`${CL[a.class].e}${a.name}`:'';}).join(',')||'Empty';const c=S.ac[p.id];const fl=c?.pw;const ia=S.aq[p.id];const pct=p.q?Math.min(100,Math.floor((p.pr/p.td)*100)):0;const pw=getPartyPower(p);let qs='🛌';let pfClass='normal';if(p.q){if(c?.pw){qs=`<span style="color:#f44">💀 WIPED</span>`;pfClass='failed';}else if(c?.ed){qs=`<span style="color:#4f4">${p.q.i} DONE!</span>`;pfClass='complete';}else{qs=`<span style="color:#fa0">${p.q.i} ${pct}%</span>`;pfClass=ia?'auto':'normal';}}return`<div style="background:#151528;border:1px solid #4a3a20;border-radius:6px;padding:6px;margin:4px 0;"><strong>${p.n}</strong> (${p.m.length}/4) ⚡${pw}${ia?'<span class="auto-badge">AUTO</span>':''}<br><small>${mb}</small><br>${p.q?`<div class="progress-bar"><div class="progress-fill ${pfClass}" style="width:${pct}%"></div></div>${qs}`:'🛌 Idle'}<br><button class="btn-small" data-a="as" data-p="${p.id}">👤</button><button class="btn-small" data-a="us" data-p="${p.id}">🔙</button><button class="btn-small" data-a="sq" data-p="${p.id}">📜</button><button class="btn-small ${ia?'btn-auto active':'btn-auto'}" data-a="ta" data-p="${p.id}">🤖</button></div>`;}).join('');
     
-    pl.querySelectorAll('[data-a="as"]').forEach(b=>{b.addEventListener('click',function(e){e.stopPropagation();const pid=parseInt(this.dataset.p);const tp=S.pt.find(p=>p.id===pid);const av=S.adv.filter(a=>a.hp>0&&!icd(a.id));if(!av.length){al('❌ No available');return;}sm(`Assign`,av.map(a=>{const cp=fp(a.id);let lb=`${CL[a.class].e} ${a.name} Lv${a.level} ⚡${a.atk+a.def}`;let ic=false,io=false;if(cp){if(cp.id===pid){lb+=' ✅';ic=true;}else{lb+=` ⚠️${cp.n}`;io=true;}}return{lb,v:a.id,inCurrentParty:ic,inOtherParty:io};}),(aid)=>asp(pid,aid));});});
-    pl.querySelectorAll('[data-a="us"]').forEach(b=>{b.addEventListener('click',function(e){e.stopPropagation();const pid=parseInt(this.dataset.p);const p=S.pt.find(x=>x.id===pid);if(!p||!p.m.length){al('⚠️ Empty');return;}sm(`Unassign`,p.m.map(id=>{const a=S.adv.find(x=>x.id===id);return{lb:`${a?CL[a.class].e+' '+a.name:'?'}`,v:id};}),(aid)=>usp(pid,aid));});});
-    pl.querySelectorAll('[data-a="sq"]').forEach(b=>{b.addEventListener('click',function(e){e.stopPropagation();const pid=parseInt(this.dataset.p);const p=S.pt.find(x=>x.id===pid);if(!p)return;if(p.q){al('⚠️ On quest');return;}if(!p.m.length){al('⚠️ Empty');return;}const av=aq();const pw=getPartyPower(p);if(!av.length){al('❌ No quests');return;}sm(`Quest ⚡${pw}`,QUESTS.map((q,i)=>{const qcd=getQcd(q.n);const cdText=qcd>0?` ⏳${fmtTime(qcd)}`:'';const avail=av.some(x=>x.n===q.n);const req=getQuestReq(q);return{lb:`${q.i} ${q.n} D:${q.d} ${q.r}g ${q.dur}s HP:${q.hp} Req⚡${req}${cdText}${!avail&&S.rep>=q.rep?' CD':''}${S.rep<q.rep?' 🔒'+q.rep:''}`,v:av.indexOf(q),lk:!avail||S.rep<q.rep};}),(qi)=>sq(pid,qi));});});
-    pl.querySelectorAll('[data-a="ta"]').forEach(b=>{b.addEventListener('click',function(e){e.stopPropagation();taq(parseInt(this.dataset.p));});});
+    pl.querySelectorAll('[data-a="as"]').forEach(b=>{b.onclick=function(e){e.stopPropagation();const pid=parseInt(this.dataset.p);const tp=S.pt.find(p=>p.id===pid);const av=S.adv.filter(a=>a.hp>0&&!icd(a.id));if(!av.length){al('❌ No available');return;}sm(`Assign`,av.map(a=>{const cp=fp(a.id);let lb=`${CL[a.class].e} ${a.name} Lv${a.level} ⚡${a.atk+a.def}`;let ic=false,io=false;if(cp){if(cp.id===pid){lb+=' ✅';ic=true;}else{lb+=` ⚠️${cp.n}`;io=true;}}return{lb,v:a.id,inCurrentParty:ic,inOtherParty:io};}),(aid)=>asp(pid,aid));};});
+    pl.querySelectorAll('[data-a="us"]').forEach(b=>{b.onclick=function(e){e.stopPropagation();const pid=parseInt(this.dataset.p);const p=S.pt.find(x=>x.id===pid);if(!p||!p.m.length){al('⚠️ Empty');return;}sm(`Unassign`,p.m.map(id=>{const a=S.adv.find(x=>x.id===id);return{lb:`${a?CL[a.class].e+' '+a.name:'?'}`,v:id};}),(aid)=>usp(pid,aid));};});
+    pl.querySelectorAll('[data-a="sq"]').forEach(b=>{b.onclick=function(e){e.stopPropagation();const pid=parseInt(this.dataset.p);const p=S.pt.find(x=>x.id===pid);if(!p)return;if(p.q){al('⚠️ On quest');return;}if(!p.m.length){al('⚠️ Empty');return;}const av=aq();const pw=getPartyPower(p);if(!av.length){al('❌ No quests');return;}sm(`Quest ⚡${pw}`,QUESTS.map((q,i)=>{const qcd=getQcd(q.n);const cdText=qcd>0?` ⏳${fmtTime(qcd)}`:'';const avail=av.some(x=>x.n===q.n);const req=getQuestReq(q);return{lb:`${q.i} ${q.n} D:${q.d} ${q.r}g ${q.dur}s HP:${q.hp} Req⚡${req}${cdText}${!avail&&S.rep>=q.rep?' CD':''}${S.rep<q.rep?' 🔒'+q.rep:''}`,v:av.indexOf(q),lk:!avail||S.rep<q.rep};}),(qi)=>sq(pid,qi));};});
+    pl.querySelectorAll('[data-a="ta"]').forEach(b=>{b.onclick=function(e){e.stopPropagation();taq(parseInt(this.dataset.p));};});
     
     const sl=document.getElementById('shopList');
     sl.innerHTML=Object.entries(EQ).map(([k,e])=>`<div style="display:flex;justify-content:space-between;background:#1a1a2a;padding:5px;margin:2px 0;border-radius:4px;font-size:10px;"><span>${e.i} ${e.n} +${e.ab}A +${e.db}D ${e.c}g</span><button class="btn-small" data-a="by" data-ek="${k}">Buy</button></div>`).join('');
-    sl.querySelectorAll('[data-a="by"]').forEach(b=>{b.addEventListener('click',function(e){e.stopPropagation();const ek=this.dataset.ek;const av=S.adv.filter(a=>a.hp>0&&a.eq.length<MAX_EQ);if(!av.length){al('❌ No slots');return;}sm(`Buy ${EQ[ek].n}`,av.map(a=>({lb:`${CL[a.class].e} ${a.name}`,v:a.id})),(aid)=>be(aid,ek));});});
+    sl.querySelectorAll('[data-a="by"]').forEach(b=>{b.onclick=function(e){e.stopPropagation();const ek=this.dataset.ek;const av=S.adv.filter(a=>a.hp>0&&a.eq.length<MAX_EQ);if(!av.length){al('❌ No slots');return;}sm(`Buy ${EQ[ek].n}`,av.map(a=>({lb:`${CL[a.class].e} ${a.name}`,v:a.id})),(aid)=>be(aid,ek));};});
     rc();
   }
 
+  // ============ SAVE/LOAD/AFK ============
   function saveGame(){
     S.lt=Date.now();
-    const ss={g:S.g,rep:S.rep,gl:S.gl,adv:S.adv,pt:S.pt.map(p=>({...p,q:null,pr:0})),lt:Date.now(),un:Array.from(S.un),dc:S.dc,aq:S.aq,gn:gn,qCd:S.qCd};
-    try{localStorage.setItem('isekaiGVfinal2',btoa(JSON.stringify(ss)));return true;}catch(e){return false;}
+    const ss={g:S.g,rep:S.rep,gl:S.gl,adv:S.adv,pt:S.pt.map(p=>({...p,q:null,pr:0})),lt:S.lt,un:Array.from(S.un),dc:S.dc,aq:S.aq,gn:gn,qCd:S.qCd};
+    localStorage.setItem('isekaiGVfinal4',btoa(JSON.stringify(ss)));
   }
-
-  function exportSave(){
-    const ss={g:S.g,rep:S.rep,gl:S.gl,adv:S.adv,pt:S.pt.map(p=>({...p,q:null,pr:0})),un:Array.from(S.un),dc:S.dc,aq:S.aq,gn:gn,qCd:S.qCd};
-    const data=btoa(JSON.stringify(ss));
-    document.getElementById('dataTextarea').value=data;
-    document.getElementById('dataModalTitle').textContent='📤 Export Save';
-    document.getElementById('dataCopyBtn').style.display='inline-block';
-    document.getElementById('dataImportConfirmBtn').style.display='inline-block';
-    document.getElementById('dataModal').classList.add('active');
-  }
-
-  function importSave(){
-    document.getElementById('dataTextarea').value='';
-    document.getElementById('dataModalTitle').textContent='📥 Import Save';
-    document.getElementById('dataCopyBtn').style.display='inline-block';
-    document.getElementById('dataImportConfirmBtn').style.display='inline-block';
-    document.getElementById('dataModal').classList.add('active');
-  }
-
-  function showGuildNameModal(){document.getElementById('guildNameInput').value=gn;document.getElementById('guildNameModal').classList.add('active');}
-  function confirmGuildName(){const n=document.getElementById('guildNameInput').value.trim().toUpperCase()||'FALLEN STAR';gn=n;document.getElementById('guildTitle').textContent=`⚔️ ${gn} ⚔️`;document.getElementById('guildNameModal').classList.remove('active');saveGame();}
 
   function loadGame(){
-    const sv=localStorage.getItem('isekaiGVfinal2');
-    if(sv){try{const dec=JSON.parse(atob(sv));S={...S,g:dec.g||50,rep:dec.rep||0,gl:dec.gl||1,adv:dec.adv||[],pt:dec.pt||[],ac:{},un:new Set(dec.un||[]),dc:dec.dc||{},aq:dec.aq||{},lt:dec.lt||Date.now(),lm:S.lm,qCd:dec.qCd||{}};gn=dec.gn||'FALLEN STAR';document.getElementById('guildTitle').textContent=`⚔️ ${gn} ⚔️`;return true;}catch(e){}}
+    const sv=localStorage.getItem('isekaiGVfinal4');
+    if(sv){try{const dec=JSON.parse(atob(sv));S={...S,g:dec.g||50,rep:dec.rep||0,gl:dec.gl||1,adv:dec.adv||[],pt:dec.pt||[],ac:{},un:new Set(dec.un||[]),dc:dec.dc||{},aq:dec.aq||{},lt:dec.lt||Date.now(),lm:[],qCd:dec.qCd||{}};gn=dec.gn||'FALLEN STAR';document.getElementById('guildTitle').textContent=`⚔️ ${gn} ⚔️`;return true;}catch(e){}}
     return false;
   }
 
+  // AFK: Calculate offline progress when page loads
   function offlineProgress(){
-    const d=Math.floor((Date.now()-S.lt)/1000);
-    if(d>3){const cy=Math.min(Math.floor(d*2),100000);const wa=ae;ae=true;for(let i=0;i<cy;i++)gloop();ae=wa;al(`⏳ Offline ${fmtTime(d)}`);}
-    S.lt=Date.now();
+    const now=Date.now();
+    const diff=Math.floor((now-S.lt)/1000);
+    if(diff>2){
+      const cycles=Math.min(Math.floor(diff*2),100000);
+      const wasAuto=ae; ae=true;
+      for(let i=0;i<cycles;i++)gloopInternal();
+      ae=wasAuto;
+      al(`⏳ Offline ${fmtTime(diff)} · Caught up!`);
+    }
+    S.lt=now;
+    saveGame();
   }
 
+  // AFK: Tab visibility change
+  document.addEventListener('visibilitychange',()=>{
+    if(document.hidden){
+      saveGame();
+      document.getElementById('afkBadge').style.display='inline-block';
+    } else {
+      const now=Date.now();
+      const diff=Math.floor((now-S.lt)/1000);
+      if(diff>2){
+        const cycles=Math.min(Math.floor(diff*2),100000);
+        const wasAuto=ae; ae=true;
+        for(let i=0;i<cycles;i++)gloopInternal();
+        ae=wasAuto;
+        al(`⏳ AFK ${fmtTime(diff)} · Caught up!`);
+      }
+      document.getElementById('afkBadge').style.display='none';
+      S.lt=now;
+      saveGame();
+      ui();
+    }
+  });
+
+  // Save before page unload
+  window.addEventListener('beforeunload',()=>{saveGame();});
+  window.addEventListener('pagehide',()=>{saveGame();});
+
+  // ============ EXPORT/IMPORT ============
+  function exportSave(){
+    const ss={g:S.g,rep:S.rep,gl:S.gl,adv:S.adv,pt:S.pt.map(p=>({...p,q:null,pr:0})),un:Array.from(S.un),dc:S.dc,aq:S.aq,gn:gn,qCd:S.qCd};
+    document.getElementById('dataTextarea').value=btoa(JSON.stringify(ss));
+    document.getElementById('dataModalTitle').textContent='📤 Export Save';
+    document.getElementById('dataModal').classList.add('active');
+  }
+  function importSave(){
+    document.getElementById('dataTextarea').value='';
+    document.getElementById('dataModalTitle').textContent='📥 Import Save';
+    document.getElementById('dataModal').classList.add('active');
+  }
+  function showGuildNameModal(){document.getElementById('guildNameInput').value=gn;document.getElementById('guildNameModal').classList.add('active');}
+  function confirmGuildName(){const n=document.getElementById('guildNameInput').value.trim().toUpperCase()||'FALLEN STAR';gn=n;document.getElementById('guildTitle').textContent=`⚔️ ${gn} ⚔️`;document.getElementById('guildNameModal').classList.remove('active');saveGame();}
+
+  // ============ EVENT BINDINGS ============
   document.getElementById('confirmGuildName').onclick=confirmGuildName;
   document.getElementById('guildHeader').ondblclick=showGuildNameModal;
   document.getElementById('saveBtn').onclick=function(){saveGame();al('💾 Saved!');};
   document.getElementById('exportBtn').onclick=exportSave;
   document.getElementById('importBtn').onclick=importSave;
   document.getElementById('dataCopyBtn').onclick=function(){const t=document.getElementById('dataTextarea');t.select();t.setSelectionRange(0,99999);try{document.execCommand('copy');al('📤 Copied!');}catch(e){};};
-  document.getElementById('dataImportConfirmBtn').onclick=function(){const d=document.getElementById('dataTextarea').value.trim();if(!d){al('❌ No data');return;}try{const dec=JSON.parse(atob(d));S={...S,g:dec.g||50,rep:dec.rep||0,gl:dec.gl||1,adv:dec.adv||[],pt:dec.pt||[],ac:{},un:new Set(dec.un||[]),dc:dec.dc||{},aq:dec.aq||{},lt:Date.now(),lm:S.lm,qCd:dec.qCd||{}};gn=dec.gn||'FALLEN STAR';document.getElementById('guildTitle').textContent=`⚔️ ${gn} ⚔️`;document.getElementById('dataModal').classList.remove('active');al('📥 Imported!');ui();saveGame();}catch(e){al('❌ Invalid data');}};
+  document.getElementById('dataImportConfirmBtn').onclick=function(){const d=document.getElementById('dataTextarea').value.trim();if(!d){al('❌ No data');return;}try{const dec=JSON.parse(atob(d));S={...S,g:dec.g||50,rep:dec.rep||0,gl:dec.gl||1,adv:dec.adv||[],pt:dec.pt||[],ac:{},un:new Set(dec.un||[]),dc:dec.dc||{},aq:dec.aq||{},lt:Date.now(),lm:[],qCd:dec.qCd||{}};gn=dec.gn||'FALLEN STAR';document.getElementById('guildTitle').textContent=`⚔️ ${gn} ⚔️`;document.getElementById('dataModal').classList.remove('active');al('📥 Imported!');ui();saveGame();}catch(e){al('❌ Invalid data');}};
   document.getElementById('upgradeGuildBtn').onclick=ug;
   document.getElementById('createPartyBtn').onclick=function(){cp(prompt('Name:'));};
   document.getElementById('autoAllBtn').onclick=taa;
@@ -230,9 +394,20 @@ No battles...</pre>
   document.getElementById('dataModal').onclick=function(e){if(e.target===this)this.classList.remove('active');};
   document.getElementById('tutorialModal').onclick=function(e){if(e.target===this)this.classList.remove('active');};
 
+  // ============ INIT ============
   function init(){
-    if(!loadGame()){S.adv=[{id:1,name:'Aldric',class:'warrior',level:1,exp:0,eq:[],atk:8,def:5,hp:100,maxHp:100}];S.un=new Set(['Aldric']);const pid=Date.now();S.pt=[{id:pid,n:'Starting Party',m:[1],q:null,pr:0,td:0}];S.aq[pid]=false;showGuildNameModal();}
-    offlineProgress();ui();setInterval(gloop,500);setInterval(saveGame,15000);
+    if(!loadGame()){
+      S.adv=[{id:1,name:'Aldric',class:'warrior',level:1,exp:0,eq:[],atk:8,def:5,hp:100,maxHp:100}];
+      S.un=new Set(['Aldric']);
+      const pid=Date.now();
+      S.pt=[{id:pid,n:'Starting Party',m:[1],q:null,pr:0,td:0}];
+      S.aq[pid]=false;
+      showGuildNameModal();
+    }
+    offlineProgress();
+    ui();
+    setInterval(gloop,500);
+    setInterval(saveGame,15000);
   }
   window.addEventListener('load',init);
 })();
