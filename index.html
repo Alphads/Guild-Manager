@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>⚔️ ISEKAI GUILD MANAGER · AFK WORKS</title>
+  <title>⚔️ ISEKAI GUILD MANAGER · FINAL</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     ::-webkit-scrollbar { width: 8px; height: 8px; }
@@ -84,35 +84,27 @@ No battles...</pre>
 <p><span style="color:#ffd700;">⚡ POWER:</span> ATK+DEF. Must meet Req⚡ to win. Kill boss before timer!</p>
 <p><span style="color:#ffd700;">🤖 AUTO:</span> Toggle 🤖 per party or Auto All. Works when tab closed!</p>
 <p><span style="color:#ffd700;">⏳ AFK:</span> Progress continues when you close the tab or switch away!</p>
+<p><span style="color:#ffd700;">🔒 COOLDOWNS:</span> Boss quests have global cooldowns - one clear per cooldown!</p>
 <p><span style="color:#ffd700;">⚔️ CLASSES:</span> Warrior(Cleave) Mage(Fireball) Rogue(Backstab) Cleric(Heal/0dmg) Archer(Vamp)</p>
 <p><span style="color:#ffd700;">💡 TIPS:</span> Click [Gear] for equipment. Double-click title to rename.</p>
 </div><button id="closeTutorialBtn2" style="margin-top:8px;width:100%;">⚔️ Got it!</button></div></div>
 
 <script>
 (function() {
-  // ============ DATA ============
   const ES = {
-    'Goblin':['   👺','  (⚔️)','  /│\\','   │','  / \\'],
-    'Skeleton':['   💀','  (🦴)','  /│\\','   │','  / \\'],
-    'Dragon':['   🐉','  (🔥)',' /🐉\\','  ││','  ╚╝'],
-    'Bandit':['   🥷','  (🗡️)','  /│\\','   │','  / \\'],
-    'Golem':['   🗿','  (💎)','  /│\\','  ║║','  ═╝'],
-    'Demon Lord':['   👹','  (👑)',' /🔥\\','  ║║','  ╚╝'],
-    'Dark Knight':['   🦹','  (⚔️)','  /▓\\','   ║','  / \\'],
-    'Lich':['   🧙','  (💀)',' /☠️\\','  ║','  / \\']
+    'Goblin':['   👺','  (⚔️)','  /│\\','   │','  / \\'], 'Skeleton':['   💀','  (🦴)','  /│\\','   │','  / \\'],
+    'Dragon':['   🐉','  (🔥)',' /🐉\\','  ││','  ╚╝'], 'Bandit':['   🥷','  (🗡️)','  /│\\','   │','  / \\'],
+    'Golem':['   🗿','  (💎)','  /│\\','  ║║','  ═╝'], 'Demon Lord':['   👹','  (👑)',' /🔥\\','  ║║','  ╚╝'],
+    'Dark Knight':['   🦹','  (⚔️)','  /▓\\','   ║','  / \\'], 'Lich':['   🧙','  (💀)',' /☠️\\','  ║','  / \\']
   };
   const HS = {
-    warrior:['  ⚔️ ',' (🛡️)','  /│\\','   │ ','  / \\'],
-    mage:['  🔮 ',' (✨)','  /│\\','   │ ','  / \\'],
-    rogue:['  🗡️ ',' (💨)','  /│\\','   │ ','  / \\'],
-    cleric:['  ✝️ ',' (💉)','  /│\\','   │ ','  / \\'],
+    warrior:['  ⚔️ ',' (🛡️)','  /│\\','   │ ','  / \\'], mage:['  🔮 ',' (✨)','  /│\\','   │ ','  / \\'],
+    rogue:['  🗡️ ',' (💨)','  /│\\','   │ ','  / \\'], cleric:['  ✝️ ',' (💉)','  /│\\','   │ ','  / \\'],
     archer:['  🏹 ',' (🎯)','  /│\\','   │ ','  / \\']
   };
   const CL = {
-    warrior:{n:'Warrior',ba:8,bd:5,e:'⚔️',sk:'cleave',dt:'dmg'},
-    mage:{n:'Mage',ba:12,bd:2,e:'🔮',sk:'fireball',dt:'dmg'},
-    rogue:{n:'Rogue',ba:10,bd:3,e:'🗡️',sk:'backstab',dt:'dmg'},
-    cleric:{n:'Cleric',ba:5,bd:7,e:'✝️',sk:'heal',dt:'heal'},
+    warrior:{n:'Warrior',ba:8,bd:5,e:'⚔️',sk:'cleave',dt:'dmg'}, mage:{n:'Mage',ba:12,bd:2,e:'🔮',sk:'fireball',dt:'dmg'},
+    rogue:{n:'Rogue',ba:10,bd:3,e:'🗡️',sk:'backstab',dt:'dmg'}, cleric:{n:'Cleric',ba:5,bd:7,e:'✝️',sk:'heal',dt:'heal'},
     archer:{n:'Archer',ba:9,bd:4,e:'🏹',sk:'lifesteal',dt:'dmg'}
   };
   const NAMES = ['Aldric','Thorne','Bram','Cedric','Dorian','Elara','Fenris','Gareth','Hawke','Iris','Jorah','Kael','Lysa','Maren','Nyx','Orin'];
@@ -127,37 +119,46 @@ No battles...</pre>
     { n:'Demon Lord', d:15, r:500, dur:70, i:'👹', e:'Demon Lord', rep:800, hp:700, cd:3600 }
   ];
   const EQ = {
-    ws:{ n:'Wood Sword', ab:3, db:0, c:50, i:'🗡️' },
-    ia:{ n:'Iron Armor', ab:0, db:3, c:60, i:'🛡️' },
-    ms:{ n:'Magic Staff', ab:6, db:0, c:150, i:'🔮' },
-    sp:{ n:'Steel Plate', ab:0, db:5, c:130, i:'⚔️' },
-    lb:{ n:'Legend Blade', ab:12, db:3, c:400, i:'⭐' },
-    sb:{ n:'Swift Boots', ab:2, db:3, c:100, i:'👢' },
+    ws:{ n:'Wood Sword', ab:3, db:0, c:50, i:'🗡️' }, ia:{ n:'Iron Armor', ab:0, db:3, c:60, i:'🛡️' },
+    ms:{ n:'Magic Staff', ab:6, db:0, c:150, i:'🔮' }, sp:{ n:'Steel Plate', ab:0, db:5, c:130, i:'⚔️' },
+    lb:{ n:'Legend Blade', ab:12, db:3, c:400, i:'⭐' }, sb:{ n:'Swift Boots', ab:2, db:3, c:100, i:'👢' },
     pr:{ n:'Power Ring', ab:5, db:1, c:200, i:'💍' }
   };
   const MAX_EQ = 3;
-
-  // ============ STATE ============
   let mc = null, ae = false, gn = 'FALLEN STAR';
-  let S = {
-    g:50, rep:0, gl:1, adv:[], pt:[], lt:Date.now(),
-    lm:[], ac:{}, un:new Set(), dc:{}, aq:{}, qCd:{}
-  };
+  let S = { g:50, rep:0, gl:1, adv:[], pt:[], lt:Date.now(), lm:[], ac:{}, un:new Set(), dc:{}, aq:{}, qCd:{} };
 
-  // ============ HELPERS ============
   function getPartyPower(p) { return p.m.reduce((s,id)=>{const a=S.adv.find(x=>x.id===id);return s+(a?a.atk+a.def:0);},0); }
   function getQuestReq(q) { return q.d * 4; }
-  function aq() { const now=Date.now(); return QUESTS.filter(q=>S.rep>=q.rep&&(!q.cd||!S.qCd[q.n]||now>=S.qCd[q.n])); }
-  function bq(p) { const pw=getPartyPower(p); const av=aq(); let b=null; for(let q of av) if(pw>=getQuestReq(q)&&(!b||q.d>b.d)) b=q; return b; }
+
+  // FIXED: Global cooldowns - only one party can complete a quest per cooldown period
+  function aq() {
+    const now = Date.now();
+    return QUESTS.filter(q => {
+      if (S.rep < q.rep) return false;
+      if (q.cd > 0 && S.qCd[q.n] && now < S.qCd[q.n]) return false;
+      return true;
+    });
+  }
+
+  function bq(p) {
+    const pw = getPartyPower(p);
+    const av = aq();
+    let best = null;
+    for(let q of av) {
+      if(pw >= getQuestReq(q) && (!best || q.d > best.d)) best = q;
+    }
+    return best;
+  }
+
   function rn() { const av=NAMES.filter(n=>!S.un.has(n)); if(!av.length) return NAMES[Math.floor(Math.random()*NAMES.length)]+' II'; const nm=av[Math.floor(Math.random()*av.length)]; S.un.add(nm); return nm; }
-  function al(m) { S.lm.unshift(`🕒 ${new Date().toLocaleTimeString().slice(0,5)} ${m}`); if(S.lm.length>10)S.lm.pop(); document.getElementById('logContent').innerHTML=S.lm.join('<br>'); }
+  function al(m) { S.lm.unshift(`🕒 ${new Date().toLocaleTimeString().slice(0,5)} ${m}`); if(S.lm.length>12)S.lm.pop(); document.getElementById('logContent').innerHTML=S.lm.join('<br>'); }
   function gcd(id){const c=S.dc[id];return c?Math.max(0,Math.ceil((c-Date.now())/1000)):0;}
   function icd(id){return gcd(id)>0;}
   function scd(id){S.dc[id]=Date.now()+30000;}
   function fmtTime(sec){if(sec<=0)return'0s';if(sec>=86400)return Math.floor(sec/86400)+'d';const h=Math.floor(sec/3600);const m=Math.floor((sec%3600)/60);const s=sec%60;if(h>0)return`${h}h ${m}m`;if(m>0)return`${m}m ${s}s`;return`${s}s`;}
   function getQcd(qn){if(!S.qCd[qn])return 0;return Math.max(0,Math.ceil((S.qCd[qn]-Date.now())/1000));}
 
-  // ============ MODAL ============
   function sm(t,o,cb){
     const m=document.getElementById('selectionModal');
     document.getElementById('modalTitle').textContent=t;
@@ -175,7 +176,6 @@ No battles...</pre>
   }
   function fp(id){return S.pt.find(p=>p.m.includes(id))||null;}
 
-  // ============ COMBAT ============
   function ic(pid,q){const p=S.pt.find(x=>x.id===pid);if(!p)return;const mb=p.m.map(id=>S.adv.find(a=>a.id===id)).filter(a=>a&&a.hp>0);S.ac[pid]={en:q.e,ehp:q.hp,meh:q.hp,mb:mb.map(m=>({...m,chp:m.hp,bt:0})),ms:[],pw:false,ed:false,td:0,th:0};}
   function us(adv,cm){
     const cd=CL[adv.class];let dmg=0,heal=0,msg='';
@@ -220,6 +220,7 @@ No battles...</pre>
       s.push('━━━━━━━━━━━━━━━━');
       if(c.ed||c.pw)s.push(`👹 ${c.en}: ${c.ed?'💀 DEFEATED':'👑 SURVIVED'}`);
       else{const hp=Math.max(0,c.ehp/c.meh);const br='█'.repeat(Math.floor(hp*20))+'░'.repeat(20-Math.floor(hp*20));s.push(`👹 ${c.en}: [${br}] ${Math.floor(c.ehp)}/${c.meh}`);}
+      s.push(`Dmg:${c.td} Heal:${c.th}`);
       s.push('');
       const esp=ES[c.en]||ES['Goblin']; const hsp=c.mb.map(m=>HS[m.class]||HS['warrior']);
       for(let i=0;i<5;i++){let l='   ';l+=(esp[i]||'     ').padEnd(16);hsp.forEach(sp=>l+=(sp[i]||'     ')+' ');s.push(l);}
@@ -231,37 +232,38 @@ No battles...</pre>
     ar.textContent=sc.join('\n\n');
   }
 
-  // ============ ACTIONS ============
-  function cp(nm){if(S.g<100){al('❌ Need 100g!');return;}S.g-=100;const id=Date.now();S.pt.push({id,n:nm||`P${S.pt.length+1}`,m:[],q:null,pr:0,td:0});S.aq[id]=false;al(`🎉 ${nm||'Party'} created!`);ui();}
-  function asp(pid,aid){const p=S.pt.find(x=>x.id===pid);const a=S.adv.find(x=>x.id===aid);if(!p||!a)return;if(icd(aid)){al(`⚠️ ${a.name} recovering`);return;}if(p.m.length>=4){al('⚠️ Full!');return;}if(a.hp<=0){al('⚠️ Unconscious!');return;}S.pt.forEach(x=>x.m=x.m.filter(i=>i!==aid));p.m.push(aid);al(`${CL[a.class].e} ${a.name} → ${p.n}`);ui();}
-  function usp(pid,aid){const p=S.pt.find(x=>x.id===pid);if(!p)return;p.m=p.m.filter(i=>i!==aid);const a=S.adv.find(x=>x.id===aid);if(a)al(`🔙 ${a.name} unassigned`);ui();}
-  function sq(pid,qi){const p=S.pt.find(x=>x.id===pid);if(!p)return;if(p.q){al('⚠️ On quest!');return;}if(!p.m.length){al('⚠️ Empty!');return;}if(p.m.some(i=>icd(i))){al('⚠️ Recovering');return;}const av=aq();const q=av[qi];if(!q)return;const qcd=getQcd(q.n);if(qcd>0){al(`⚠️ ${q.n} CD: ${fmtTime(qcd)}`);return;}const pw=getPartyPower(p);const req=getQuestReq(q);if(pw<req){al(`⚠️ Weak ⚡${pw}/${req}`);return;}p.q=q;p.pr=0;p.td=q.dur;ic(pid,q);al(`⚔️ ${p.n} → ${q.i} ${q.n}`);ui();}
-  function aaq(p){if(!p||p.q||!p.m.length)return false;if(p.m.some(i=>icd(i)))return false;const b=bq(p);if(!b)return false;const qi=aq().indexOf(b);if(qi>=0){p.q=b;p.pr=0;p.td=b.dur;ic(p.id,b);return true;}return false;}
+  function cp(nm){if(S.g<100){al('❌ Need 100g!');return;}S.g-=100;const id=Date.now();S.pt.push({id,n:nm||`P${S.pt.length+1}`,m:[],q:null,pr:0,td:0});S.aq[id]=false;al(`🎉 Party "${nm||'New'}" created!`);ui();}
+  function asp(pid,aid){const p=S.pt.find(x=>x.id===pid);const a=S.adv.find(x=>x.id===aid);if(!p||!a)return;if(icd(aid)){al(`⚠️ ${a.name} recovering ${gcd(aid)}s`);return;}if(p.m.length>=4){al('⚠️ Party full!');return;}if(a.hp<=0){al('⚠️ ${a.name} unconscious!');return;}S.pt.forEach(x=>x.m=x.m.filter(i=>i!==aid));p.m.push(aid);al(`${CL[a.class].e} ${a.name} → ${p.n} (⚡${getPartyPower(p)})`);ui();}
+  function usp(pid,aid){const p=S.pt.find(x=>x.id===pid);if(!p)return;p.m=p.m.filter(i=>i!==aid);const a=S.adv.find(x=>x.id===aid);if(a)al(`🔙 ${a.name} unassigned from ${p.n}`);ui();}
+  function sq(pid,qi){const p=S.pt.find(x=>x.id===pid);if(!p)return;if(p.q){al('⚠️ Already on quest!');return;}if(!p.m.length){al('⚠️ Party empty!');return;}if(p.m.some(i=>icd(i))){al('⚠️ Members recovering!');return;}const av=aq();const q=av[qi];if(!q)return;const qcd=getQcd(q.n);if(qcd>0){al(`⚠️ ${q.n} on cooldown: ${fmtTime(qcd)}`);return;}const pw=getPartyPower(p);const req=getQuestReq(q);if(pw<req){al(`⚠️ ${p.n} too weak! ⚡${pw}/${req} for ${q.n}`);return;}p.q=q;p.pr=0;p.td=q.dur;ic(pid,q);al(`⚔️ ${p.n} → ${q.i} ${q.n} (⚡${pw}, ${q.dur}s, ${q.r}g)`);ui();}
+  function aaq(p){if(!p||p.q||!p.m.length)return false;if(p.m.some(i=>icd(i)))return false;const b=bq(p);if(!b)return false;const qi=aq().indexOf(b);if(qi>=0){p.q=b;p.pr=0;p.td=b.dur;ic(p.id,b);al(`🤖 ${p.n} auto → ${b.i} ${b.n} (⚡${getPartyPower(p)})`);return true;}return false;}
   function taq(pid){const p=S.pt.find(x=>x.id===pid);if(!p)return;S.aq[pid]=!S.aq[pid];if(S.aq[pid]){al(`🤖 Auto ON: ${p.n}`);if(!p.q)aaq(p);}else al(`🔕 Auto OFF: ${p.n}`);ae=Object.values(S.aq).some(v=>v===true);ui();}
-  function taa(){ae=!ae;if(ae){S.pt.forEach(p=>{S.aq[p.id]=true;if(!p.q)aaq(p);});al('🤖 AUTO ALL ON');}else{S.pt.forEach(p=>S.aq[p.id]=false);al('🔕 Auto off');}ui();}
-  function be(aid,ek){const a=S.adv.find(x=>x.id===aid);const e=EQ[ek];if(!a||!e)return;if(S.g<e.c){al(`❌ ${e.c}g`);return;}if(a.eq.includes(ek)){al('⚠️ Equipped');return;}if(a.eq.length>=MAX_EQ){al('⚠️ Full');return;}S.g-=e.c;a.eq.push(ek);a.atk+=e.ab||0;a.def+=e.db||0;al(`🛒 ${a.name}: ${e.i}`);ui();}
-  function re(aid,ek){const a=S.adv.find(x=>x.id===aid);const e=EQ[ek];if(!a||!e)return;if(!a.eq.includes(ek)){al('⚠️ Not equipped');return;}a.eq=a.eq.filter(x=>x!==ek);a.atk-=e.ab||0;a.def-=e.db||0;al(`🗑️ ${a.name}: ${e.n}`);ui();}
-  function ug(){const c=S.gl*500;if(S.g<c){al(`❌ ${c}g`);return;}S.g-=c;S.gl++;S.rep+=50;al(`🏰 Lv${S.gl}!`);ui();}
-  function rcl(cn){const cs={warrior:150,mage:180,rogue:160,cleric:130,archer:155,random:100};const c=cs[cn]||100;if(S.g<c){al(`❌ ${c}g`);return;}let rc=cn;if(cn==='random'){const ks=Object.keys(CL);rc=ks[Math.floor(Math.random()*ks.length)];}const cd=CL[rc];const nm=rn();S.g-=c;S.adv.push({id:Date.now(),name:nm,class:rc,level:1,exp:0,eq:[],atk:cd.ba,def:cd.bd,hp:100,maxHp:100});al(`🧑 ${cd.e} ${nm}`);ui();}
-  function sae(aid){const a=S.adv.find(x=>x.id===aid);if(!a)return;if(!a.eq.length){al(`ℹ️ No equipment`);return;}const op=a.eq.map(ek=>{const e=EQ[ek];return{lb:`🗑️ Remove ${e.i} ${e.n}`,v:{aid:a.id,ek}};});sm(`${a.name}'s Gear`,op,(d)=>re(d.aid,d.ek));}
+  function taa(){ae=!ae;if(ae){S.pt.forEach(p=>{S.aq[p.id]=true;if(!p.q)aaq(p);});al('🤖 AUTO ALL ON - parties will auto-quest');}else{S.pt.forEach(p=>S.aq[p.id]=false);al('🔕 Auto questing disabled');}ui();}
+  function be(aid,ek){const a=S.adv.find(x=>x.id===aid);const e=EQ[ek];if(!a||!e)return;if(S.g<e.c){al(`❌ Need ${e.c}g for ${e.n}`);return;}if(a.eq.includes(ek)){al('⚠️ Already equipped!');return;}if(a.eq.length>=MAX_EQ){al('⚠️ ${a.name} has max equipment!');return;}S.g-=e.c;a.eq.push(ek);a.atk+=e.ab||0;a.def+=e.db||0;al(`🛒 ${a.name} got ${e.i} ${e.n} (⚡${a.atk+a.def})`);ui();}
+  function re(aid,ek){const a=S.adv.find(x=>x.id===aid);const e=EQ[ek];if(!a||!e)return;if(!a.eq.includes(ek)){al('⚠️ Not equipped!');return;}a.eq=a.eq.filter(x=>x!==ek);a.atk-=e.ab||0;a.def-=e.db||0;al(`🗑️ ${a.name} removed ${e.n} (⚡${a.atk+a.def})`);ui();}
+  function ug(){const c=S.gl*500;if(S.g<c){al(`❌ Need ${c}g to upgrade!`);return;}S.g-=c;S.gl++;S.rep+=50;al(`🏰 Guild upgraded to Lv${S.gl}! +50 Rep`);ui();}
+  function rcl(cn){const cs={warrior:150,mage:180,rogue:160,cleric:130,archer:155,random:100};const c=cs[cn]||100;if(S.g<c){al(`❌ Need ${c}g to recruit!`);return;}let rc=cn;if(cn==='random'){const ks=Object.keys(CL);rc=ks[Math.floor(Math.random()*ks.length)];}const cd=CL[rc];const nm=rn();S.g-=c;S.adv.push({id:Date.now(),name:nm,class:rc,level:1,exp:0,eq:[],atk:cd.ba,def:cd.bd,hp:100,maxHp:100});al(`🧑 Recruited ${cd.e} ${nm} the ${cd.n} (⚡${cd.ba+cd.bd})`);ui();}
+  function sae(aid){const a=S.adv.find(x=>x.id===aid);if(!a)return;if(!a.eq.length){al(`ℹ️ ${a.name} has no equipment`);return;}const op=a.eq.map(ek=>{const e=EQ[ek];return{lb:`🗑️ ${e.i} ${e.n} (+${e.ab}A +${e.db}D)`,v:{aid:a.id,ek}};});sm(`${a.name}'s Equipment`,op,(d)=>re(d.aid,d.ek));}
 
   function rq(p){
     const c=S.ac[p.id]; if(!p.q)return; const qn=p.q.n;
-    if(c&&c.pw){al(`💀 ${p.n} WIPED!`);p.q=null;p.pr=0;delete S.ac[p.id];return;}
+    if(c&&c.pw){al(`💀 ${p.n} WIPED on ${p.q.n}! All members died.`);p.q=null;p.pr=0;delete S.ac[p.id];return;}
     if(p.pr>=p.td){
       if(c&&c.ed){
         const rw=p.q.r*(1+(S.gl-1)*0.1); S.g+=Math.floor(rw); S.rep+=p.q.d*3;
-        p.m.forEach(id=>{const a=S.adv.find(x=>x.id===id);if(a&&a.hp>0){a.exp+=p.q.d*10;if(a.exp>=a.level*120){a.level++;a.exp=0;a.atk+=3;a.def+=2;a.maxHp+=20;a.hp=a.maxHp;if(!ae)al(`⭐ ${a.name} → Lv${a.level}!`);}}});
-        if(!ae)al(`✅ ${p.n}: +${Math.floor(rw)}g`);
-        if(p.q.cd>0){S.qCd[qn]=Date.now()+(p.q.cd*1000);}
-      } else {al(`⏰ ${p.n} FAILED!`);}
+        p.m.forEach(id=>{const a=S.adv.find(x=>x.id===id);if(a&&a.hp>0){a.exp+=p.q.d*10;if(a.exp>=a.level*120){a.level++;a.exp=0;a.atk+=3;a.def+=2;a.maxHp+=20;a.hp=a.maxHp;al(`⭐ ${a.name} leveled up! Now Lv${a.level}!`);}}});
+        al(`✅ ${p.n} completed ${p.q.n}! +${Math.floor(rw)}g +${p.q.d*3} Rep`);
+        if(p.q.cd>0){
+          S.qCd[qn]=Date.now()+(p.q.cd*1000);
+          al(`⏳ ${p.q.n} now on global cooldown: ${fmtTime(p.q.cd)}`);
+        }
+      } else {al(`⏰ ${p.n} FAILED ${p.q.n}! Boss survived.`);}
       p.q=null; p.pr=0; delete S.ac[p.id];
     }
   }
 
-  // ============ GAME LOOP ============
   function gloopInternal(){
-    Object.entries(S.dc).forEach(([id,et])=>{if(Date.now()>=et){const a=S.adv.find(x=>x.id===parseInt(id));if(a&&a.hp<=0){a.hp=a.maxHp;delete S.dc[id];}}});
+    Object.entries(S.dc).forEach(([id,et])=>{if(Date.now()>=et){const a=S.adv.find(x=>x.id===parseInt(id));if(a&&a.hp<=0){a.hp=a.maxHp;delete S.dc[id];al(`❤️ ${a.name} revived!`);}}});
     S.pt.forEach(p=>{if(S.aq[p.id]&&!p.q)aaq(p);});
     S.pt.forEach(p=>{
       if(!p.q)return; const c=S.ac[p.id];
@@ -274,7 +276,6 @@ No battles...</pre>
   }
   function gloop(){gloopInternal();ui();}
 
-  // ============ UI ============
   function getSortedAdv(){return [...S.adv].sort((a,b)=>a.name.localeCompare(b.name));}
   function getSortedPt(){return [...S.pt].sort((a,b)=>a.n.localeCompare(b.n));}
 
@@ -293,96 +294,61 @@ No battles...</pre>
     const pl=document.getElementById('partyList');
     pl.innerHTML=getSortedPt().map(p=>{const mb=p.m.map(id=>{const a=S.adv.find(x=>x.id===id);return a?`${CL[a.class].e}${a.name}`:'';}).join(',')||'Empty';const c=S.ac[p.id];const fl=c?.pw;const ia=S.aq[p.id];const pct=p.q?Math.min(100,Math.floor((p.pr/p.td)*100)):0;const pw=getPartyPower(p);let qs='🛌';let pfClass='normal';if(p.q){if(c?.pw){qs=`<span style="color:#f44">💀 WIPED</span>`;pfClass='failed';}else if(c?.ed){qs=`<span style="color:#4f4">${p.q.i} DONE!</span>`;pfClass='complete';}else{qs=`<span style="color:#fa0">${p.q.i} ${pct}%</span>`;pfClass=ia?'auto':'normal';}}return`<div style="background:#151528;border:1px solid #4a3a20;border-radius:6px;padding:6px;margin:4px 0;"><strong>${p.n}</strong> (${p.m.length}/4) ⚡${pw}${ia?'<span class="auto-badge">AUTO</span>':''}<br><small>${mb}</small><br>${p.q?`<div class="progress-bar"><div class="progress-fill ${pfClass}" style="width:${pct}%"></div></div>${qs}`:'🛌 Idle'}<br><button class="btn-small" data-a="as" data-p="${p.id}">👤</button><button class="btn-small" data-a="us" data-p="${p.id}">🔙</button><button class="btn-small" data-a="sq" data-p="${p.id}">📜</button><button class="btn-small ${ia?'btn-auto active':'btn-auto'}" data-a="ta" data-p="${p.id}">🤖</button></div>`;}).join('');
     
-    pl.querySelectorAll('[data-a="as"]').forEach(b=>{b.onclick=function(e){e.stopPropagation();const pid=parseInt(this.dataset.p);const tp=S.pt.find(p=>p.id===pid);const av=S.adv.filter(a=>a.hp>0&&!icd(a.id));if(!av.length){al('❌ No available');return;}sm(`Assign`,av.map(a=>{const cp=fp(a.id);let lb=`${CL[a.class].e} ${a.name} Lv${a.level} ⚡${a.atk+a.def}`;let ic=false,io=false;if(cp){if(cp.id===pid){lb+=' ✅';ic=true;}else{lb+=` ⚠️${cp.n}`;io=true;}}return{lb,v:a.id,inCurrentParty:ic,inOtherParty:io};}),(aid)=>asp(pid,aid));};});
-    pl.querySelectorAll('[data-a="us"]').forEach(b=>{b.onclick=function(e){e.stopPropagation();const pid=parseInt(this.dataset.p);const p=S.pt.find(x=>x.id===pid);if(!p||!p.m.length){al('⚠️ Empty');return;}sm(`Unassign`,p.m.map(id=>{const a=S.adv.find(x=>x.id===id);return{lb:`${a?CL[a.class].e+' '+a.name:'?'}`,v:id};}),(aid)=>usp(pid,aid));};});
-    pl.querySelectorAll('[data-a="sq"]').forEach(b=>{b.onclick=function(e){e.stopPropagation();const pid=parseInt(this.dataset.p);const p=S.pt.find(x=>x.id===pid);if(!p)return;if(p.q){al('⚠️ On quest');return;}if(!p.m.length){al('⚠️ Empty');return;}const av=aq();const pw=getPartyPower(p);if(!av.length){al('❌ No quests');return;}sm(`Quest ⚡${pw}`,QUESTS.map((q,i)=>{const qcd=getQcd(q.n);const cdText=qcd>0?` ⏳${fmtTime(qcd)}`:'';const avail=av.some(x=>x.n===q.n);const req=getQuestReq(q);return{lb:`${q.i} ${q.n} D:${q.d} ${q.r}g ${q.dur}s HP:${q.hp} Req⚡${req}${cdText}${!avail&&S.rep>=q.rep?' CD':''}${S.rep<q.rep?' 🔒'+q.rep:''}`,v:av.indexOf(q),lk:!avail||S.rep<q.rep};}),(qi)=>sq(pid,qi));};});
+    pl.querySelectorAll('[data-a="as"]').forEach(b=>{b.onclick=function(e){e.stopPropagation();const pid=parseInt(this.dataset.p);const tp=S.pt.find(p=>p.id===pid);const av=S.adv.filter(a=>a.hp>0&&!icd(a.id));if(!av.length){al('❌ No available adventurers!');return;}sm(`Assign to ${tp?.n}`,av.map(a=>{const cp=fp(a.id);let lb=`${CL[a.class].e} ${a.name} Lv${a.level} ⚡${a.atk+a.def}`;let ic=false,io=false;if(cp){if(cp.id===pid){lb+=' ✅';ic=true;}else{lb+=` ⚠️${cp.n}`;io=true;}}return{lb,v:a.id,inCurrentParty:ic,inOtherParty:io};}),(aid)=>asp(pid,aid));};});
+    pl.querySelectorAll('[data-a="us"]').forEach(b=>{b.onclick=function(e){e.stopPropagation();const pid=parseInt(this.dataset.p);const p=S.pt.find(x=>x.id===pid);if(!p||!p.m.length){al('⚠️ Party empty!');return;}sm(`Unassign from ${p.n}`,p.m.map(id=>{const a=S.adv.find(x=>x.id===id);return{lb:`${a?CL[a.class].e+' '+a.name:'?'}`,v:id};}),(aid)=>usp(pid,aid));};});
+    pl.querySelectorAll('[data-a="sq"]').forEach(b=>{b.onclick=function(e){e.stopPropagation();const pid=parseInt(this.dataset.p);const p=S.pt.find(x=>x.id===pid);if(!p)return;if(p.q){al('⚠️ Already on quest!');return;}if(!p.m.length){al('⚠️ Party empty!');return;}const av=aq();const pw=getPartyPower(p);if(!av.length){al('❌ No quests available!');return;}sm(`Quest for ${p.n} (⚡${pw})`,QUESTS.map((q,i)=>{const qcd=getQcd(q.n);const cdText=qcd>0?` ⏳${fmtTime(qcd)}`:'';const avail=av.some(x=>x.n===q.n);const req=getQuestReq(q);return{lb:`${q.i} ${q.n} D:${q.d} ${q.r}g ${q.dur}s HP:${q.hp} Req⚡${req}${cdText}${!avail&&S.rep>=q.rep?' 🔒Global CD':''}${S.rep<q.rep?' 🔒Rep:'+q.rep:''}`,v:av.indexOf(q),lk:!avail||S.rep<q.rep};}),(qi)=>sq(pid,qi));};});
     pl.querySelectorAll('[data-a="ta"]').forEach(b=>{b.onclick=function(e){e.stopPropagation();taq(parseInt(this.dataset.p));};});
     
     const sl=document.getElementById('shopList');
     sl.innerHTML=Object.entries(EQ).map(([k,e])=>`<div style="display:flex;justify-content:space-between;background:#1a1a2a;padding:5px;margin:2px 0;border-radius:4px;font-size:10px;"><span>${e.i} ${e.n} +${e.ab}A +${e.db}D ${e.c}g</span><button class="btn-small" data-a="by" data-ek="${k}">Buy</button></div>`).join('');
-    sl.querySelectorAll('[data-a="by"]').forEach(b=>{b.onclick=function(e){e.stopPropagation();const ek=this.dataset.ek;const av=S.adv.filter(a=>a.hp>0&&a.eq.length<MAX_EQ);if(!av.length){al('❌ No slots');return;}sm(`Buy ${EQ[ek].n}`,av.map(a=>({lb:`${CL[a.class].e} ${a.name}`,v:a.id})),(aid)=>be(aid,ek));};});
+    sl.querySelectorAll('[data-a="by"]').forEach(b=>{b.onclick=function(e){e.stopPropagation();const ek=this.dataset.ek;const av=S.adv.filter(a=>a.hp>0&&a.eq.length<MAX_EQ);if(!av.length){al('❌ No free equipment slots!');return;}sm(`Buy ${EQ[ek].n}`,av.map(a=>({lb:`${CL[a.class].e} ${a.name} (${a.eq.length}/${MAX_EQ})`,v:a.id})),(aid)=>be(aid,ek));};});
     rc();
   }
 
-  // ============ SAVE/LOAD/AFK ============
   function saveGame(){
     S.lt=Date.now();
     const ss={g:S.g,rep:S.rep,gl:S.gl,adv:S.adv,pt:S.pt.map(p=>({...p,q:null,pr:0})),lt:S.lt,un:Array.from(S.un),dc:S.dc,aq:S.aq,gn:gn,qCd:S.qCd};
-    localStorage.setItem('isekaiGVfinal4',btoa(JSON.stringify(ss)));
+    localStorage.setItem('isekaiGVfinal5',btoa(JSON.stringify(ss)));
   }
-
   function loadGame(){
-    const sv=localStorage.getItem('isekaiGVfinal4');
+    const sv=localStorage.getItem('isekaiGVfinal5');
     if(sv){try{const dec=JSON.parse(atob(sv));S={...S,g:dec.g||50,rep:dec.rep||0,gl:dec.gl||1,adv:dec.adv||[],pt:dec.pt||[],ac:{},un:new Set(dec.un||[]),dc:dec.dc||{},aq:dec.aq||{},lt:dec.lt||Date.now(),lm:[],qCd:dec.qCd||{}};gn=dec.gn||'FALLEN STAR';document.getElementById('guildTitle').textContent=`⚔️ ${gn} ⚔️`;return true;}catch(e){}}
     return false;
   }
-
-  // AFK: Calculate offline progress when page loads
   function offlineProgress(){
-    const now=Date.now();
-    const diff=Math.floor((now-S.lt)/1000);
-    if(diff>2){
-      const cycles=Math.min(Math.floor(diff*2),100000);
-      const wasAuto=ae; ae=true;
-      for(let i=0;i<cycles;i++)gloopInternal();
-      ae=wasAuto;
-      al(`⏳ Offline ${fmtTime(diff)} · Caught up!`);
-    }
-    S.lt=now;
-    saveGame();
+    const now=Date.now(); const diff=Math.floor((now-S.lt)/1000);
+    if(diff>2){const cycles=Math.min(Math.floor(diff*2),100000);const wasAuto=ae;ae=true;for(let i=0;i<cycles;i++)gloopInternal();ae=wasAuto;al(`⏳ Offline ${fmtTime(diff)} · Progress caught up!`);}
+    S.lt=now; saveGame();
   }
 
-  // AFK: Tab visibility change
   document.addEventListener('visibilitychange',()=>{
-    if(document.hidden){
-      saveGame();
-      document.getElementById('afkBadge').style.display='inline-block';
-    } else {
-      const now=Date.now();
-      const diff=Math.floor((now-S.lt)/1000);
-      if(diff>2){
-        const cycles=Math.min(Math.floor(diff*2),100000);
-        const wasAuto=ae; ae=true;
-        for(let i=0;i<cycles;i++)gloopInternal();
-        ae=wasAuto;
-        al(`⏳ AFK ${fmtTime(diff)} · Caught up!`);
-      }
-      document.getElementById('afkBadge').style.display='none';
-      S.lt=now;
-      saveGame();
-      ui();
-    }
+    if(document.hidden){saveGame();document.getElementById('afkBadge').style.display='inline-block';}
+    else{const now=Date.now();const diff=Math.floor((now-S.lt)/1000);if(diff>2){const cycles=Math.min(Math.floor(diff*2),100000);const wasAuto=ae;ae=true;for(let i=0;i<cycles;i++)gloopInternal();ae=wasAuto;al(`⏳ AFK ${fmtTime(diff)} · Caught up!`);}document.getElementById('afkBadge').style.display='none';S.lt=now;saveGame();ui();}
   });
-
-  // Save before page unload
   window.addEventListener('beforeunload',()=>{saveGame();});
   window.addEventListener('pagehide',()=>{saveGame();});
 
-  // ============ EXPORT/IMPORT ============
   function exportSave(){
     const ss={g:S.g,rep:S.rep,gl:S.gl,adv:S.adv,pt:S.pt.map(p=>({...p,q:null,pr:0})),un:Array.from(S.un),dc:S.dc,aq:S.aq,gn:gn,qCd:S.qCd};
     document.getElementById('dataTextarea').value=btoa(JSON.stringify(ss));
-    document.getElementById('dataModalTitle').textContent='📤 Export Save';
-    document.getElementById('dataModal').classList.add('active');
+    document.getElementById('dataModalTitle').textContent='📤 Export Save'; document.getElementById('dataModal').classList.add('active');
   }
   function importSave(){
     document.getElementById('dataTextarea').value='';
-    document.getElementById('dataModalTitle').textContent='📥 Import Save';
-    document.getElementById('dataModal').classList.add('active');
+    document.getElementById('dataModalTitle').textContent='📥 Import Save'; document.getElementById('dataModal').classList.add('active');
   }
   function showGuildNameModal(){document.getElementById('guildNameInput').value=gn;document.getElementById('guildNameModal').classList.add('active');}
   function confirmGuildName(){const n=document.getElementById('guildNameInput').value.trim().toUpperCase()||'FALLEN STAR';gn=n;document.getElementById('guildTitle').textContent=`⚔️ ${gn} ⚔️`;document.getElementById('guildNameModal').classList.remove('active');saveGame();}
 
-  // ============ EVENT BINDINGS ============
   document.getElementById('confirmGuildName').onclick=confirmGuildName;
   document.getElementById('guildHeader').ondblclick=showGuildNameModal;
-  document.getElementById('saveBtn').onclick=function(){saveGame();al('💾 Saved!');};
+  document.getElementById('saveBtn').onclick=function(){saveGame();al('💾 Game saved!');};
   document.getElementById('exportBtn').onclick=exportSave;
   document.getElementById('importBtn').onclick=importSave;
-  document.getElementById('dataCopyBtn').onclick=function(){const t=document.getElementById('dataTextarea');t.select();t.setSelectionRange(0,99999);try{document.execCommand('copy');al('📤 Copied!');}catch(e){};};
-  document.getElementById('dataImportConfirmBtn').onclick=function(){const d=document.getElementById('dataTextarea').value.trim();if(!d){al('❌ No data');return;}try{const dec=JSON.parse(atob(d));S={...S,g:dec.g||50,rep:dec.rep||0,gl:dec.gl||1,adv:dec.adv||[],pt:dec.pt||[],ac:{},un:new Set(dec.un||[]),dc:dec.dc||{},aq:dec.aq||{},lt:Date.now(),lm:[],qCd:dec.qCd||{}};gn=dec.gn||'FALLEN STAR';document.getElementById('guildTitle').textContent=`⚔️ ${gn} ⚔️`;document.getElementById('dataModal').classList.remove('active');al('📥 Imported!');ui();saveGame();}catch(e){al('❌ Invalid data');}};
+  document.getElementById('dataCopyBtn').onclick=function(){const t=document.getElementById('dataTextarea');t.select();t.setSelectionRange(0,99999);try{document.execCommand('copy');al('📤 Copied to clipboard!');}catch(e){};};
+  document.getElementById('dataImportConfirmBtn').onclick=function(){const d=document.getElementById('dataTextarea').value.trim();if(!d){al('❌ No data to import!');return;}try{const dec=JSON.parse(atob(d));S={...S,g:dec.g||50,rep:dec.rep||0,gl:dec.gl||1,adv:dec.adv||[],pt:dec.pt||[],ac:{},un:new Set(dec.un||[]),dc:dec.dc||{},aq:dec.aq||{},lt:Date.now(),lm:[],qCd:dec.qCd||{}};gn=dec.gn||'FALLEN STAR';document.getElementById('guildTitle').textContent=`⚔️ ${gn} ⚔️`;document.getElementById('dataModal').classList.remove('active');al('📥 Save imported successfully!');ui();saveGame();}catch(e){al('❌ Invalid save data!');}};
   document.getElementById('upgradeGuildBtn').onclick=ug;
-  document.getElementById('createPartyBtn').onclick=function(){cp(prompt('Name:'));};
+  document.getElementById('createPartyBtn').onclick=function(){cp(prompt('Party name:'));};
   document.getElementById('autoAllBtn').onclick=taa;
   document.getElementById('tutorialBtn').onclick=function(){document.getElementById('tutorialModal').classList.add('active');};
   document.querySelectorAll('[data-recruit]').forEach(b=>{b.onclick=function(){rcl(this.dataset.recruit);};});
@@ -394,20 +360,9 @@ No battles...</pre>
   document.getElementById('dataModal').onclick=function(e){if(e.target===this)this.classList.remove('active');};
   document.getElementById('tutorialModal').onclick=function(e){if(e.target===this)this.classList.remove('active');};
 
-  // ============ INIT ============
   function init(){
-    if(!loadGame()){
-      S.adv=[{id:1,name:'Aldric',class:'warrior',level:1,exp:0,eq:[],atk:8,def:5,hp:100,maxHp:100}];
-      S.un=new Set(['Aldric']);
-      const pid=Date.now();
-      S.pt=[{id:pid,n:'Starting Party',m:[1],q:null,pr:0,td:0}];
-      S.aq[pid]=false;
-      showGuildNameModal();
-    }
-    offlineProgress();
-    ui();
-    setInterval(gloop,500);
-    setInterval(saveGame,15000);
+    if(!loadGame()){S.adv=[{id:1,name:'Aldric',class:'warrior',level:1,exp:0,eq:[],atk:8,def:5,hp:100,maxHp:100}];S.un=new Set(['Aldric']);const pid=Date.now();S.pt=[{id:pid,n:'Starting Party',m:[1],q:null,pr:0,td:0}];S.aq[pid]=false;showGuildNameModal();}
+    offlineProgress();ui();setInterval(gloop,500);setInterval(saveGame,15000);
   }
   window.addEventListener('load',init);
 })();
